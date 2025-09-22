@@ -1,0 +1,1 @@
+web-element name="nanoswarm" protocol="asc2"> [DOMINANCE] { "safety": "bit.data.lock", "meta-dev": "bit.contract.enforce", "items": ["bit.bot.script", "bit.gh.synt:", "bit.sandbox"], "exec-policy": "content-execution" } </web-element>
