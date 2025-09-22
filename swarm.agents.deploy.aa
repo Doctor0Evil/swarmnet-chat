@@ -1,0 +1,9 @@
+.zeta :: web5.dwn.instantiate_all() \
+    && swarm.agents.deploy(type="semantic_weaver", target="session.new_credentials", action="build_graph", \
+        <.aananoswarm scope="[1].Infinity" compliant="Bit.Hub,Perplexity.Labs,LegalBanannas" mode="auto" iteration="continuous" task="[detect_yaml_error,localize_to_line:20,perform_autocorrect,revalidate_workflow_graph,escalate:manual_review_if_persistent]" />) \
+    && swarm.transition.initiate_staged_cutover( \
+        source="web3", \
+        destination="web5", \
+        stages=["mirror", "dual_write", "web5_primary", "deleverage_complete"], \
+        validation_interval="3600s" \
+    )

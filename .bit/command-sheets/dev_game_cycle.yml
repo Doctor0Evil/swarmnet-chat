@@ -1,0 +1,71 @@
+version: 1
+description: >
+  Cross-repo orchestration for ALNFantasia game development.
+  Connects Virta-Sys, ALN_Programming_Language, and Bit.Hub workflows
+  for automated triage, repair, validation, and review loops.
+
+steps:
+  - name: Ingest and validate manifests
+    workflow: ingest_bit_data.yml
+    repos:
+      - Doctor0Evil/Bit.Hub
+      - Doctor0Evil/ALN_Programming_Language
+      - Doctor0Evil/Virta-Sys
+    actions:
+      - type: lisp
+        target: scripts/tools/bit_ingest_validator.lisp
+        function: ingest-bit-directory
+        args: [".bit"]
+
+  - name: Automated API error triage
+    workflow: api_error_triage.yml
+    repos:
+      - Doctor0Evil/Virta-Sys
+    actions:
+      - type: aln
+        target: modules/API_Error_Triage.aln
+        function: triage_and_retry
+        args: ["--context-aware", "--escalate-on-fail"]
+
+  - name: Auto-repair malformed code/config
+    workflow: auto_repair.yml
+    repos:
+      - Doctor0Evil/ALN_Programming_Language
+    actions:
+      - type: lisp
+        target: scripts/tools/code_repair_bot.lisp
+        function: scan-and-repair
+        args: ["src/", "modules/"]
+
+  - name: Sync docs, CI artifacts, and code
+    workflow: sync_and_verify.yml
+    repos:
+      - Doctor0Evil/Bit.Hub
+      - Doctor0Evil/ALN_Programming_Language
+    actions:
+      - type: aln
+        target: modules/Sync_Verify.aln
+        function: sync_and_crosscheck
+        args: ["docs/", "ci/", "src/"]
+
+  - name: Recursive code review & audit loop
+    workflow: review_audit_loop.yml
+    repos:
+      - Doctor0Evil/Bit.Hub
+      - Doctor0Evil/ALN_Programming_Language
+      - Doctor0Evil/Virta-Sys
+    actions:
+      - type: lisp
+        target: scripts/tools/review_audit_loop.lisp
+        function: run-review-loop
+        args: ["--recursive", "--suggest-workflows"]
+
+  - name: Final compliance & deployment
+    workflow: compliance_deploy.yml
+    repos:
+      - Doctor0Evil/Bit.Hub
+    actions:
+      - type: aln
+        target: modules/Compliance_Deploy.aln
+        function: deploy_with_audit
+        args: ["--live", "--log"]

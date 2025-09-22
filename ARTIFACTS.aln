@@ -1,0 +1,10 @@
+ACTION get_artifact
+    INPUT id string
+    EXEC
+        file = "artifacts/" + id + ".aln"
+        IF FILE.exists file THEN
+            RETURN LOAD file
+        ELSE
+            LOG ❌ Artifact not found: {id}
+            RETURN NULL
+        ENDIF

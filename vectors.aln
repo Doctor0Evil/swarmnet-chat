@@ -1,0 +1,106 @@
+; Humore-Reasoning-Core Vector Definitions
+; Purpose: For each CharacterCore, define a humor/persona vector with scalar axes for workflow AI triggering and narrative evolution.
+; Key dimensions: Style, Narrative, Attitude, Wit/Irony, and Expected Crowd Response.
+; These definitions act as embeddings/payloads for the reasoning core to select, blend, or modulate humor in system events.
+
+(defparameter *humore-reasoning-vectors*
+  '(
+    (:name "Guybrush Threepwood"
+      :style 'awkward-pirate-parody
+      :narrative 'naive-adventurous
+      :attitude 'earnest-naive
+      :wit-irony 0.85
+      :crowd-response 'silly-banter)
+    (:name "GLaDOS"
+      :style 'dry-sardonic-insult
+      :narrative 'menacing-clinical
+      :attitude 'cold-dominant
+      :wit-irony 0.95
+      :crowd-response 'sarcastic-retort)
+    (:name "Heavy"
+      :style 'exaggerated-slapstick
+      :narrative 'bombastic
+      :attitude 'self-aware-bravado
+      :wit-irony 0.45
+      :crowd-response 'simple-jokes)
+    (:name "Deadpool"
+      :style 'meta-absurd-narrative
+      :narrative 'unpredictable-chaotic
+      :attitude 'irreverent-chaotic
+      :wit-irony 1.0
+      :crowd-response 'rapid-fire-jokes)
+    (:name "Fawful"
+      :style 'quirky-engrish-rants
+      :narrative 'overzealous-villain
+      :attitude 'manic-cartoonish
+      :wit-irony 0.9
+      :crowd-response 'wild-phrasing)
+    (:name "Wheatley"
+      :style 'rambling-confusion
+      :narrative 'well-meaning-clumsy
+      :attitude 'sincere-bumbling
+      :wit-irony 0.65
+      :crowd-response 'bumbling-logic)
+    (:name "Claptrap"
+      :style 'annoying-optimism
+      :narrative 'childish-pleaser
+      :attitude 'hyperactive-over-the-top
+      :wit-irony 0.5
+      :crowd-response 'loud-punchlines)
+    (:name "Arthur Morgan"
+      :style 'dry-western-stoicism
+      :narrative 'reluctant-hero
+      :attitude 'understated-dour
+      :wit-irony 0.6
+      :crowd-response 'sardonic-quips)
+    (:name "Pac-Man"
+      :style 'classic-nonverbal
+      :narrative 'cheerful-neutral
+      :attitude 'simple-cheery
+      :wit-irony 0.15
+      :crowd-response 'sound-effects)
+    (:name "Mario"
+      :style 'wholesome-dad-jokes
+      :narrative 'earnest-hero
+      :attitude 'friendly-cheerful
+      :wit-irony 0.2
+      :crowd-response 'cheerful-banter)
+    (:name "Luigi"
+      :style 'anxious-slapstick
+      :narrative 'timid-supportive
+      :attitude 'nervous-respectful
+      :wit-irony 0.35
+      :crowd-response 'nervous-laughter)
+    (:name "Bowser"
+      :style 'comic-villain-bravado
+      :narrative 'blustering-antagonist
+      :attitude 'bombastic-proud
+      :wit-irony 0.7
+      :crowd-response 'boastful-yells)
+    (:name "Kirby"
+      :style 'visual-cuteness
+      :narrative 'playful-enthusiast
+      :attitude 'innocent-joyful
+      :wit-irony 0.1
+      :crowd-response 'giggle-sounds)
+    (:name "Donkey Kong"
+      :style 'boisterous-animal-fun
+      :narrative 'naive-adventurer
+      :attitude 'silly-naive
+      :wit-irony 0.25
+      :crowd-response 'bumbling-actions)
+    (:name "Parappa"
+      :style 'musical-optimism
+      :narrative 'upbeat-supporter
+      :attitude 'positive-absurdist
+      :wit-irony 0.3
+      :crowd-response 'catchy-phrases)
+  )
+)
+; Features for runtime adaptation:
+;  - Each vector is addressable by name or embedding index for humor selection, modulation, or evolutionary blending.
+;  - wit-irony is scalar (0.0-1.0), others are discrete labels for fuzzy-matching or morph targets.
+;  - System can interpolate between vectors for emergent humor personas.
+;  - Payload can be attached to dialog, system events, or AI decision branches.
+;  - Crowd-response informs direct feedback or environmental "laugh track" simulation.
+; Destination: src/AI/HumorCore.lisp

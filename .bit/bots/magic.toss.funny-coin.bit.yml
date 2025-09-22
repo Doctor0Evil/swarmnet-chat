@@ -1,0 +1,16 @@
+apiVersion: bitbot/v1
+kind: Bot
+metadata:
+  name: magic.toss.funny-coin.bit
+  description: >
+    A whimsical BitBot that tosses a magical coin to trigger random, humorous, or wondrous in‑game events.
+spec:
+  triggers:
+    - workflow_dispatch
+    - schedule
+  permissions:
+    contents: read
+    pull-requests: none
+  actions:
+    - type: execute
+      target: scripts/bots/magic_toss_funny_coin.lisp

@@ -1,0 +1,70 @@
+# Humor Bot AI PowerShell Workflow with BitBot Audit & Dispatch
+name: Humor Bot - AI PS Workflow
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+  id-token: write
+
+env:
+  BITHUB_TRACE_FILE: trace.jsonl
+  BITHUB_AUDIT_DIR: .bit/audit
+  BITHUB_ARTIFACT: humor_bot_laugh.log
+
+jobs:
+  humor-bot-check:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PowerShell
+        uses: actions/setup-powershell@v2
+        with:
+          pwsh-version: '7.4.0'
+
+      - name: Run Humor Bot AI Script
+        run: |
+          Write-Host '🤖 Activating Humor Bot AI: Initiating maximum puns!'
+          $joke = "Why did the neural network refuse to cross the road? Not enough data on the other side!"
+          Write-Host $joke
+          Add-Content -Path ${{ env.BITHUB_ARTIFACT }} -Value "$(Get-Date -Format o) :: $joke"
+
+      - name: Prepare audit directory and trace
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "${{ env.BITHUB_AUDIT_DIR }}" | Out-Null
+          $trace = @{
+            run_id = "${{ github.run_id }}"
+            ref = "${{ github.ref }}"
+            sha = "${{ github.sha }}"
+            timestamp = (Get-Date).ToUniversalTime().ToString("o")
+            humor_bot_status = "completed"
+          } | ConvertTo-Json -Depth 4
+          $trace | Out-File -FilePath "${{ env.BITHUB_TRACE_FILE }}" -Encoding utf8
+
+      - name: Upload Sticky Trigger Audit Trail
+        uses: actions/upload-artifact@v4
+        with:
+          name: sticky.trigger.audit.trail
+          path: ${{ env.BITHUB_TRACE_FILE }}
+
+      - name: Dispatch MegaStructure kickoff
+        env:
+          GH_API: https://api.github.com
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          body=$(jq -n --arg rid "${GITHUB_RUN_ID}" --arg ref "${GITHUB_REF}" --arg sha "${GITHUB_SHA}" \
+            '{event_type:"MEGASTRUCTURE_KICKOFF", client_payload:{from:"humor-bot", run_id:$rid, ref:$ref, sha:$sha}}')
+          curl -sS -X POST \
+            -H "Authorization: Bearer ${TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "${GH_API}/repos/${OWNER}/${REPO}/dispatches" \
+            -d "${body}"

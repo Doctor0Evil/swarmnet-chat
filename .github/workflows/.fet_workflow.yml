@@ -1,0 +1,30 @@
+<fet_workflow 
+    id="universal-aananoswarm"
+    agent="aananoswarm"
+    src="paste.txt"
+    mode="universal"
+    scope="all"
+    safe="true"
+    compliant="Bit.Hub,Perplexity.Labs,LegalBanannas"
+    iteration="continuous"
+    environments="virtual,web"
+    containment="swarmnet-strict"
+>
+    <scope-definitions source="Scope-Definitions.aln" mode="universal" safe="true"/>
+    <swarm-legalbanannas 
+        execute="evaluate(legal:compliance_check & privacy:gdpr_ccpa & audit:log_all & role:verify_user & target:not_protected_group)" 
+    />
+    <swarm_mode 
+        file="repo-health-checker.fet"
+        actions="audit, chain_revert, enable_rag_logging, aln_tool_restructure, distribute_permission, anchor_blockchain"
+        safety_resistance="max"
+        safe_iterations="12"
+        workflow_reconstruction="true"
+        environments="virtual,web"
+        containment="swarmnet-strict"
+    />
+    <bit_bot 
+        link="repo-health-checker"
+        description="Continuously audit repos, revert faults, enable RAG logging, restructure tools, distribute permission, blockchain anchoring"
+    />
+</fet_workflow>

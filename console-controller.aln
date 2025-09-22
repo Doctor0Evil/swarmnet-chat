@@ -1,0 +1,1 @@
+prompt.wizard: open_console('verbose_debug_logging.txt')

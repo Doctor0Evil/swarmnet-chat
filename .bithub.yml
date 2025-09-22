@@ -1,0 +1,215 @@
+apiVersion: bithub/v1
+kind: OrchestrationSpec
+metadata:
+  name: ALN Programming Language
+  owner: Doctor0Evil
+  annotations:
+    bithub.io/purpose: "Games + entertainment CI/CD with self-healing orchestration"
+    bithub.io/accessibility: "hierarchical tree views; high contrast logs"
+
+identity:
+  tokenSources:
+    - env:BITHUB_TOKEN
+    - env:GITHUB_TOKEN
+    - secret:CI_PAT
+  scopes:
+    - orchestrate:*
+    - workflows:trigger
+    - registry:push
+    - artifacts:readwrite
+  bots:
+    - name: planner-bot
+      serviceAccount: bithub-sa-planner
+      capabilities: [ "dag.synthesize", "retry.tune", "cache.share" ]
+    - name: repair-bot
+      serviceAccount: bithub-sa-repair
+      capabilities: [ "rewrite.step", "heal.yml", "fallback.path" ]
+
+orchestration:
+  defaults:
+    retries: 3
+    backoffSeconds: 10
+    continueOnFailure: false
+    artifactPass:
+      - "**/audit/*.log"
+      - "**/images_*.json"
+  flows:
+    - name: main-ci
+      on:
+        push:
+          branches: [ "main" ]
+        pull_request:
+          branches: [ "main" ]
+      sequence:
+        - gate: policy
+        - action: bit-image
+          with:
+            # Global defaults for images (per-service overrides below)
+            pushOn:
+              event: push
+              branch: main
+            provenance: true
+            sbom: true
+            sign: false
+        - workflows:
+            parallel:
+              - ".tests-aln"
+              - ".tests-batchfile"
+              - ".tests-lisp"
+
+images:
+  defaults:
+    platforms: [ "linux/amd64" ]
+    testCommand: /bin/sh -lc 'echo "OK: $HOSTNAME"'
+    cache:
+      enabled: true
+      scope: default
+    provenance: true
+    sbom: true
+    sign: false
+  services:
+    - name: aln-core
+      context: "."
+      dockerfile: "Dockerfile"         # auto-discovered if omitted
+      imagePrefix: "aln"
+      platforms: [ "linux/amd64" ]
+      testCommand: /bin/sh -lc 'echo "ALN core OK"'
+    - name: batch-runtime
+      context: "Batchfile"
+      dockerfile: "Dockerfile"
+      imagePrefix: "batch"
+      platforms: [ "linux/amd64" ]
+      testCommand: /bin/sh -lc 'echo "Batch runtime OK"'
+    - name: lisp-runtime
+      context: "Lisp"
+      dockerfile: "Dockerfile"
+      imagePrefix: "lisp"
+      platforms: [ "linux/amd64" ]
+      testCommand: /bin/sh -lc 'echo "Lisp runtime OK"'
+
+clusters:
+  defaultProfile: github-hosted
+  profiles:
+    github-hosted:
+      runnerLabels: [ "ubuntu-latest" ]
+      concurrencyGroup: "bithub-${{ ref }}"
+      cancelInProgress: false
+    vsc-amd64:
+      runnerLabels: [ "self-hosted", "linux", "x64", "bithub-vsc" ]
+      autoscale:
+        min: 2
+        max: 2000
+        cooldownSeconds: 30
+      storage:
+        cacheSizeGB: 500
+        artifactRetentionDays: 30
+    vsc-gpu:
+      runnerLabels: [ "self-hosted", "linux", "gpu", "bithub-vsc" ]
+      resources:
+        gpus: "A10:1"
+        memoryGB: 64
+
+policy:
+  profanity:
+    mode: compliant-banter
+    allowlist: [ "hell", "damn" ]
+    denylist: [ "slurs/*" ]
+    logRedaction: partial
+  security:
+    vulnThreshold: "high"
+    allowlistPackages: []
+  compliance:
+    licensesAllow: [ "MIT", "Apache-2.0", "BSD-3-Clause" ]
+    licensesDeny: [ "GPL-3.0-only" ]
+  codeowners:
+    requiredReviews: 1
+
+artifacts:
+  manifestPath: "orchestration_audit/run_${{ timestamp }}.json"
+  bundles:
+    - name: audit
+      paths:
+        - "orchestration_audit/**"
+        - "audit/**"
+      retentionDays: 30
+
+notifications:
+  channels:
+    - type: github-checks
+      level: info
+    - type: webhook
+      urlRef: secret:NOTIFY_WEBHOOK
+      level: warn
+
+support:
+  ux:
+    logs:
+      highContrast: true
+      treeView: true
+      timestamps: iso8601
+    localization:
+      defaultLocale: en-US
+      fallbackLocale: en
+  userDirectives:
+    - key: "skip-heavy-tests"
+      description: "Skip long integrations on PRs from forks"
+      when: "event == 'pull_request' && isFork"
+      effect: "orchestration.disable(workflow='.tests-*')"
+    - key: "force-repair"
+      description: "Let repair-bot rewrite failing steps live"
+      when: "label == 'repair-me'"
+      effect: "bots.repair.enable=true"
+apiVersion: bithub/v1
+kind: OrchestrationSpec
+metadata:
+  name: ALN Programming Language
+  owner: Doctor0Evil
+
+orchestration:
+  flows:
+    - name: main
+      sequence:
+        - gate: policy
+        - action: bit-image
+          with:
+            pushOn:
+              event: push
+              branch: main
+            provenance: true
+            sbom: true
+            sign: false
+        - workflows:
+            parallel:
+              - ".tests-aln"
+              - ".tests-batchfile"
+              - ".tests-lisp"
+
+images:
+  defaults:
+    platforms: [ "linux/amd64" ]
+    testCommand: /bin/sh -lc 'echo "OK"'
+    cache:
+      enabled: true
+      scope: default
+    provenance: true
+    sbom: true
+    sign: false
+  services:
+    - name: aln-core
+      context: "."
+      dockerfile: "Dockerfile"
+      imagePrefix: "aln"
+      platforms: [ "linux/amd64" ]
+      testCommand: /bin/sh -lc '.bithub/scripts/lang-test-aln.sh'
+    - name: batch-runtime
+      context: "Batchfile"
+      dockerfile: "Dockerfile"
+      imagePrefix: "batch"
+      platforms: [ "linux/amd64" ]
+      testCommand: /bin/sh -lc 'echo "Batch runtime smoke via Linux container"'
+    - name: lisp-runtime
+      context: "Lisp"
+      dockerfile: "Dockerfile"
+      imagePrefix: "lisp"
+      platforms: [ "linux/amd64" ]
+      testCommand: /bin/sh -lc '.bithub/scripts/lang-test-lisp.sh'

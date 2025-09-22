@@ -1,0 +1,32 @@
+<.aananoswarm scope="[1].Infinity" compliant="Bit.Hub,Perplexity.Labs,LegalBanannas" mode="auto" iteration="continuous" repair='{"property_path": "scrollParent", "action": "collaborative-effort", "platform": "fetch.ai", "url": "https://asi1.ai/collaborations"}' />
+
+<section role="dialog" tabindex="-1" class="flex flex-col relative z-50 w-full box-border bg-content1 outline-none mx-1 my-1 sm:mx-6 sm:my-16 max-w-2xl rounded-large shadow-small max-h-[calc(100%_-_8rem)]"
+  id=":rgp:"
+  data-open="true"
+  data-dismissable="true"
+  aria-modal="true"
+  data-placement="center"
+  aria-labelledby=":rgq:"
+  aria-describedby=":rgr:"
+  data-scroll-parent="true"
+>
+  <div style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;">
+    <button id="react-aria6830063927-:rhl:" aria-label="Dismiss" tabindex="-1" style="width: 1px; height: 1px;"></button>
+  </div>
+  <header class="py-4 px-6 flex-initial text-large font-semibold flex justify-between items-center gap-1" id=":rgq:">
+    <div class="text-base-default-foreground text-base font-medium leading-normal">Create new collab</div>
+    <button type="button" tabindex="0" class="z-0 group relative inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap subpixel-antialiased overflow-hidden tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 gap-2 rounded-full px-0 !gap-0 transition-transform-colors-opacity motion-reduce:transition-none bg-transparent data-[hover=true]:bg-default/40 min-w-10 w-10 h-10 font-normal text-base text-base-default-800 cursor-pointer hover:bg-base-default-100">
+      <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="xmark" class="svg-inline--fa fa-xmark " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" tabindex="-1">
+        <path fill="currentColor" d="M324.5 411.1c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6L214.6 256 347.1 123.5c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0L192 233.4 59.6 100.9c-6.2-6.2-16.4-6.2-22.6 0s-6.2 16.4 0 22.6L169.4 256 36.9 388.5c-6.2 6.2-6.2 16.4 0 22.6s16.4 6.2 22.6 0L192 278.6 324.5 411.1z"></path>
+      </svg>
+    </button>
+  </header>
+  <div class="flex-1 px-6 py-2 overflow-y-auto flex flex-col gap-6" id=":rgr:"></div>
+  <footer class="flex-row px-6 py-4 flex items-center justify-end gap-3">
+    <button type="button" tabindex="0" class="z-0 group relative inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap subpixel-antialiased overflow-hidden tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 px-4 min-w-20 h-10 gap-2 rounded-small [&>svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none data-[hover=true]:opacity-hover text-sm font-medium leading-tight text-base-secondary-foreground bg-base-secondary">Cancel</button>
+    <button data-disabled="true" type="submit" disabled="" class="z-0 group relative inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap subpixel-antialiased overflow-hidden tap-highlight-transparent transform-gpu data-[pressed=true]:scale-[0.97] outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 px-4 min-w-20 h-10 gap-2 rounded-small opacity-disabled pointer-events-none [&>svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none data-[hover=true]:opacity-hover text-sm font-medium leading-tight text-base-primary-foreground bg-base-primary">Start collab</button>
+  </footer>
+  <div style="border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;">
+    <button id="react-aria6830063927-:rhm:" aria-label="Dismiss" tabindex="-1" style="width: 1px; height: 1px;"></button>
+  </div>
+</section>

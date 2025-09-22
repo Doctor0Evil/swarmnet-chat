@@ -1,0 +1,5 @@
+(defun select-random-event (player ctx)
+  (let* ((eligible (filter-events ctx player))
+         (weights (map eligible (lambda (event) (event-weight event player ctx))))
+         (event (weighted-choice eligible weights)))
+    (if event (trigger-event event player ctx) nil)))

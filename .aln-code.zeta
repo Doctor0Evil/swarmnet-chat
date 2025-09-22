@@ -1,0 +1,1 @@
+.zeta :: .aln-code.compliance({ git.sync_root:"Doctor0Evil/.comet", branch:"main", auth:env.GITHUB_TOKEN, python:"3.8", pip_upgrade:True, tool:"pylint", safe_dir:True }) :: web_element(fetch.event) -> { try: agent_event_handler(event), except TimeoutError: swarm.safety.partial_result(event).contain() } :: enforce_autonomous(fetch.ai).sandboxed_secure()

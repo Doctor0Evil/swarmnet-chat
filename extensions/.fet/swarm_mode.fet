@@ -1,0 +1,1 @@
+swarm_mode [ file=".fet" source="repo-health-checker" actions=[activate_audit, chain_revert, enable_RAG_logging, restructure_repo_aln, distribute_permission, anchor_blockchain] safety_resistance="max" safe_iterations=10 workflow_reconstruction="all_envs" containment="swarmnet-strict" ]

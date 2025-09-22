@@ -1,0 +1,12 @@
+{
+  "autonomyLevel": "self-directed|supervised|human-paired",
+  "consentModel": "real-time|progressive|appealable|reversible",
+  "maxPrivilege": "region-capped",
+  "explainability": "always-on",
+  "policyContextHooks": ["emotionIndex", "volatilityLevel", "auditHistory"],
+  "safetyCircuit": {
+    "failOpen": true,
+    "guardianAgent": "region-auditable",
+    "sandboxMode": "dynamic"
+  }
+}

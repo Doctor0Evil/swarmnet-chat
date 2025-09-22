@@ -1,0 +1,2 @@
+"allow shell:open_console context=window mode=fail_resistant show=enterprise_commands;"
+bit.workflow.context --mode=enterprise mode=fail_resistant show=contract_audit > /secure/path/nanoswarm.aii

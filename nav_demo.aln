@@ -1,0 +1,2 @@
+artifact = ARTIFACTS.get_artifact "ARC-9241"
+LOG 🪄 Artifact: {artifact["name"]} (Rarity: {artifact["rarity"]})

@@ -1,0 +1,10 @@
+{
+  "version": "bithub.super_structure.v1",
+  "root": "b3:7f9c…",
+  "bundles": [
+    { "name": "megastructure", "hash": "b3:aa12…", "size": 12498341 },
+    { "name": "traces", "hash": "b3:19be…", "size": 289334 },
+    { "name": "policy_decisions", "hash": "b3:cc77…", "size": 4122 }
+  ],
+  "sticky": { "source": "github", "run_id": "123456789" }
+}

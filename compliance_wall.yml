@@ -1,0 +1,69 @@
+name: Compliance Wall
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  # id-token: write # This is only needed if you are authenticating to a cloud provider (e.g., AWS, GCP, Azure)
+
+jobs:
+  compliance-wall:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go environment
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22' # Using a floating version like '1.22' is often more maintainable
+          cache: true
+          cache-dependency-path: go.sum
+
+      - name: Resolve Go dependencies
+        run: |
+          if [ -f "go.mod" ]; then
+            go mod download
+          else
+            echo "No go.mod present, skipping go mod download"
+          fi
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          # Specify a .NET version if your project requires it
+          # dotnet-version: '8.0.x' 
+          
+          # To enable caching, set to true and provide the dependency path
+          # cache: true
+          # cache-dependency-path: path/to/your.csproj or packages.lock.json
+
+      - name: OPA Policy Eval
+        run: |
+          # It's good practice to exit on error
+          set -e 
+          opa check policies/
+          opa eval --input data/input.json --data policies/ "data.compliance.allow == true"
+
+      - name: Run Compliance Wall
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG_CONTENTS }}
+        run: |
+          bash ./tools/loldeploy_wall.sh
+
+      - name: Archive compliance reports
+        # This step will run even if previous steps fail, which is good for debugging
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compliance-wall-report-${{ github.run_id }}
+          path: |
+            .bithubreports/
+            compliance_report.json
+            compliance_report.aln
+            artifacts/
+            .bit/state/

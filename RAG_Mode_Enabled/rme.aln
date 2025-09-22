@@ -1,0 +1,11 @@
+// 1. Isolate all repo task execution in a hardened virtual container, RAG_Mode enabled:
+protect.run_in_sandbox("git clone https://github.com/Doctor0Evil/swarmnet.git && cd swarmnet && ./init.sh", mode="RAG", verbosity="full")
+
+// 2. Interpret user/email task-cycle query with RAG isolation, logging at max verbosity:
+task.perform(".zeta-task-cycle { email.clear().sort('importance').mark(['important','urgent','starred']).automation.notify({delivery:'push',schedule:'realtime',queue:'priority'}); workflow.correction({stability:'auto-heal',cycle:'continuous',notifications:'enabled',scheduler:'google-tasks-api'}); }", mode="RAG", isolate=true, verbosity="full")
+
+// 3. Monitor and auto-correct agentic actions, rolling back on failure with detailed logs:
+agent.monitor("repo-actions") { on.fail(rollback, log="full", notify.admin=true, isolate=true, rag_mode=true) }
+
+// 4. Enforce environment integrity at every stage:
+environment.audit(mode="continuous", enforce_sandbox=true, log_detail="full", on_breach=lockdown)

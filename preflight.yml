@@ -1,0 +1,73 @@
+name: Preflight Bot — Compliance Sentinel
+
+on:
+  push:
+    branches: [ main, develop, earliest-critical ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  actions: read
+
+concurrency:
+  group: "preflight-${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: false
+
+env:
+  BITHUB_AUDIT_DIR: .bithub/audit
+  BITHUB_LOG_DIR: .bithub/logs
+  BITHUB_POLICY_DIR: .bithub/policies
+  BITHUB_TRACE_FILE: .bithub/audit/humor-reasoning-trace.json
+  BITHUB_OPA_RESULT: .bithub/audit/opa-result.json
+  HUMOR_LOG: .bithub/logs/humor-bot.log
+  COMPLIANCE_LEVEL: strict
+
+jobs:
+  compliance-sentinel:
+    name: Compliance Floor & Humor Reasoning
+    runs-on: windows-latest
+    continue-on-error: true   # Never blocks other workflows
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Run HRM + Compliance Floor
+        shell: pwsh
+        env:
+          OWNER_ENFORCEMENT_PRIVATE_KEY_PEM: ${{ secrets.OWNER_ENFORCEMENT_PRIVATE_KEY_PEM }}
+        run: |
+          ./scripts/run-hrm-compliance.ps1 `
+            -ComplianceLevel "${{ env.COMPLIANCE_LEVEL }}" `
+            -AuditDir "${{ env.BITHUB_AUDIT_DIR }}" `
+            -PolicyDir "${{ env.BITHUB_POLICY_DIR }}" `
+            -HumorLog "${{ env.HUMOR_LOG }}" `
+            -TraceFile "${{ env.BITHUB_TRACE_FILE }}" `
+            -OpaResultFile "${{ env.BITHUB_OPA_RESULT }}" `
+            -OpaQuery "data.bithub.allow" `
+            -FailMode "log" `
+            -AutoInstallOpa
+
+      - name: Write Compliance Verdict
+        shell: pwsh
+        run: |
+          $opa = Get-Content "${{ env.BITHUB_OPA_RESULT }}" | ConvertFrom-Json
+          $verdict = @{
+            pass  = $opa.pass
+            level = "${{ env.COMPLIANCE_LEVEL }}"
+            ts    = (Get-Date).ToUniversalTime().ToString("o")
+          }
+          $verdict | ConvertTo-Json -Depth 5 | Out-File -FilePath "${{ env.BITHUB_AUDIT_DIR }}/compliance-verdict.json" -Encoding utf8
+          Write-Host "::notice::Compliance verdict written."
+
+      - name: Upload Audit Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: preflight-audit
+          path: |
+            ${{ env.BITHUB_AUDIT_DIR }}
+            ${{ env.BITHUB_LOG_DIR }}
+          retention-days: 14

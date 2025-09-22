@@ -1,0 +1,88 @@
+# Ignore any GitHub-runner generated workflows
+# These are often injected or modified by GitHub's own infra and are not part of Bit.Hub's canonical set.
+.github/workflows/github-runner-*.yml
+.github/workflows/github-runner-*.yaml
+
+# Ignore any temp or backup workflow files
+.github/workflows/*~ 
+.github/workflows/*.bak
+.github/workflows/*.tmp
+.github/workflows/*.swp
+
+# Ignore ephemeral .bitbot build artifacts (but keep the source workflows)
+.bitbot/tmp/
+.bitbot/cache/
+.bitbot/generated/
+
+# Keep our canonical Bit.Hub workflows and manifests
+!.github/workflows/*.bit.yml
+!.github/workflows/*.bitbot.yml
+!.github/workflows/smartrunner.bit.yml
+!.github/workflows/*bithub*.yml
+!.github/workflows/*bithub*.yaml
+!.gitcomply
+!.gitenforcement
+!.bit/config.bit.create
+.bit/runtime/
+
+# Ignore OS/system junk
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+desktop.ini
+
+# Ignore IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.log
+*.tmp
+
+# Ignore build/output
+bin/
+obj/
+out/
+dist/
+build/
+target/
+coverage/
+*.dll
+*.exe
+*.so
+*.dylib
+*.pdb
+
+# Ignore dependency caches
+node_modules/
+packages/
+*.lock
+*.cache
+*.tgz
+
+# Ignore secret files
+*.pem
+*.key
+*.crt
+*.pfx
+*.env
+.env.*
+
+# Ignore GitHub web-ui injected chunks
+*.woff
+*.woff2
+*.ttf
+*.eot
+*.map
+*.css
+*.js
+*chunk-*.js
+*vendors-*.js
+
+# Ignore test data
+*.db
+*.sqlite
+*.jsonl
+*.trace
+*.audit

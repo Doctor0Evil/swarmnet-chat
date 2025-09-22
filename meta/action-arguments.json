@@ -1,0 +1,21 @@
+[
+  {
+    "name": "action",
+    "type": "string",
+    "allowedValues": ["read", "write", "override", "appeal", "audit"],
+    "rightsConstraint": "regionally adaptive"
+  },
+  {
+    "name": "requestor",
+    "type": "Entity",
+    "required": true
+  },
+  {
+    "name": "target",
+    "type": "Entity"
+  },
+  {
+    "name": "region",
+    "type": "string",
+    "default": "geo/locale-auto"
+  }

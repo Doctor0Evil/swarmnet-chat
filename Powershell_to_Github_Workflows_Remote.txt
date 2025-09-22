@@ -1,0 +1,308 @@
+
+PS C:\Users\Hunter\ALN_Programming_Language> Set-Location -Path 'C:\Users\Hunter\ALN_Programming_Language'
+
+# --- Powershell: Organize and Correct All Folders/Files for ALN Repo ---
+
+# 1. Define desired directory structure
+$foldersToEnsure = @(
+    '.github',
+    '.github/workflows',
+    'scripts',
+    'Modules/ALNCore',
+    'Adapters',
+    'aln-ecosystem',
+    'assets',
+    'artifacts',
+    'ci',
+    'community',
+    'compliance',
+    'config',
+    'data',
+    'deployment',
+    'docs',
+    'docker',
+    'examples',
+    'framework',
+    'game',
+    'github',
+    'grammars',
+    'graphs',
+    'grimoire',
+    'helm/aln-secure-stack/templates',
+    'inlet',
+    'k8s-manifests',
+    'k8s',
+    'menus',
+    'modules',
+    'monitor',
+    'narrative',
+    'npcMonitor',
+    'platforms',
+    'policies',
+    'pos',
+    'renderers',
+    'src',
+    'system-automation',
+    'templates',
+    'tests',
+    'UX',
+    'web',
+    'web/components',
+    'web/src/components',
+    'webclient/comet'
+)
+
+# 2. Create missing folders
+foreach ($folder in $foldersToEnsure) {
+    $full = Join-Path $PWD $folder
+    if (-not (Test-Path $full)) {
+        New-Item -ItemType Directory -Path $full -Force | Out-Null
+        Write-Host "Created: $folder"
+    }
+}
+
+# 3. Remove unwanted/obsolete folders (customize as needed)
+$foldersToRemove = @(
+    'OldDocs',
+    'backup',
+    'tmp',
+    '__old',
+    '.trash',
+    'legacy_code'
+)
+foreach ($folder in $foldersToRemove) {
+    $full = Join-Path $PWD $folder
+    if (Test-Path $full) {
+        Remove-Item -Path $full -Recurse -Force
+        Write-Host "Removed obsolete: $folder"
+    }
+}
+
+# 4. Move misplaced files/folders to correct locations (edit these custom rules as needed)
+$moveRules = @(
+    @{ Source = 'ALNCore.psm1';      Dest = 'Modules\ALNCore\ALNCore.psm1' },
+    @{ Source = 'Engine.dll';        Dest = 'ALN_Programming_Language\Engine.dll' },
+    @{ Source = 'aln_core_syntax_v1.0.7.aln'; Dest = 'schemas\aln_core_syntax_v1.0.7.aln' },
+    @{ Source = 'README.md';         Dest = 'docs\README.md' }
+)
+foreach ($rule in $moveRules) {
+    $src = Join-Path $PWD $rule.Source
+    $dst = Join-Path $PWD $rule.Dest
+    if (Test-Path $src) {
+        $dstDir = Split-Path $dst -Parent
+        if (-not (Test-Path $dstDir)) { New-Item -Path $dstDir -ItemType Directory -Force | Out-Null }
+        Move-Item -Path $src -Destination $dst -Force
+        Write-Host "Moved $($rule.Source) to $($rule.Dest)"
+    }
+}
+
+# 5. Stage all changes for Git
+git add -A
+
+# 6. Commit changes
+git commit -m "Organize and correct folders, destinations, and all file paths [Automated Fixup]"
+
+# 7. Push to main branch
+git pull --rebase origin main
+git push origin main
+
+# --- GitHub Actions Workflow: File/Folder Structure Validator ---
+
+$workflow = @'
+name: Validate Directory Structure & Enforce Layout
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  validate-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Check required directories and files
+        run: |
+          required=(
+            .github
+            .github/workflows
+            scripts
+            Modules/ALNCore
+            # ... add more as-needed
+          )
+          for dir in "${required[@]}"; do
+            if [ ! -d "$dir" ]; then
+              echo "❗Missing directory: $dir" && exit 1
+            fi
+          done
+          echo "✅ All critical directories are present."
+      - name: Ensure no obsolete directories
+        run: |
+          obsolete=(
+            OldDocs
+            backup
+            tmp
+            __old
+            .trash
+            legacy_code
+          )
+          for dir in "${obsolete[@]}"; do
+            if [ -d "$dir" ]; then
+              echo "❗Obsolete directory present: $dir" && exit 1
+            fi
+          done
+          echo "✅ No obsolete directories detected."
+'@
+Set-Content -Path .github\workflows\structure_validator.yml -Value $workflow -Encoding utf8 -Force
+
+git add .github\workflows\structure_validator.yml
+git commit -m "Add structure validator workflow for folders and files"
+git pull --rebase origin main
+git push origin main
+Created: Adapters
+Created: compliance
+Created: framework
+Created: menus
+Created: npcMonitor
+Created: platforms
+Created: pos
+Created: renderers
+Created: system-automation
+Created: templates
+Created: UX
+Moved ALNCore.psm1 to Modules\ALNCore\ALNCore.psm1
+Moved Engine.dll to ALN_Programming_Language\Engine.dll
+Moved README.md to docs\README.md
+git : warning: in the working copy of 'Modules/ALNCore/ALNCore.psm1', CRLF will be replaced by LF the next time Git touches it
+At line:99 char:1
++ git add -A
++ ~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+warning: in the working copy of '.env', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of '.github/workflows/aln_ai_ci.yml', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'ALN_Profile.ps1', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'InfineonSLB9665TPM/aln_commands.txt', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'InfineonSLB9665TPM/cybernetic_energy_resource_spec.txt', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'InfineonSLB9665TPM/feature_options.txt', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'InfineonSLB9665TPM/nexus_map.json', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'ai_language_recommendations.txt', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'ai_reasoning.json', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'aln_process_chart.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'internal.agp', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'monitor_npcs.ps1', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'scripts/infineon-bios-setup.ps1', CRLF will be replaced by LF the next time Git touches it
+[main 328c9a4] Organize and correct folders, destinations, and all file paths [Automated Fixup]
+ 18 files changed, 319 insertions(+), 174 deletions(-)
+ create mode 100644 .env
+ create mode 100644 .github/workflows/aln_ai_ci.yml
+ delete mode 100644 ALNCore.psm1
+ create mode 100644 ALN_Profile.ps1
+ rename Engine.dll => ALN_Programming_Language/Engine.dll (100%)
+ create mode 100644 InfineonSLB9665TPM/aln_commands.txt
+ create mode 100644 InfineonSLB9665TPM/cybernetic_energy_resource_spec.txt
+ create mode 100644 InfineonSLB9665TPM/feature_options.txt
+ create mode 100644 InfineonSLB9665TPM/nexus_map.json
+ create mode 100644 UsersHunterAppDataLocalTemp.git-credentials
+ create mode 100644 ai_language_recommendations.txt
+ create mode 100644 ai_reasoning.json
+ create mode 100644 aln_process_chart.md
+ rename README.md => docs/README.md (100%)
+ create mode 100644 internal.agp
+ create mode 100644 monitor_npcs.ps1
+ create mode 100644 scripts/infineon-bios-setup.ps1
+git : From https://github.com/Doctor0Evil/ALN_Programming_Language
+At line:105 char:1
++ git pull --rebase origin main
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (From https://gi...amming_Language:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ * branch            main       -> FETCH_HEAD
+   10a4c35..9b8d6b1  main       -> origin/main
+Rebasing (1/1)
+[KSuccessfully rebased and updated refs/heads/main.
+git : remote: error: GH013: Repository rule violations found for refs/heads/main.        
+At line:106 char:1
++ git push origin main
++ ~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (remote: error: ...s/main.        :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+remote: 
+remote: - GITHUB PUSH PROTECTION        
+remote:   â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”        
+remote:     Resolve the following violations before pushing again        
+remote: 
+remote:     - Push cannot contain secrets        
+remote: 
+remote:             
+remote:      (?) Learn how to resolve a blocked push        
+remote:      https://docs.github.com/code-security/secret-scanning/working-with-secret-scanning-and-push-protection/working-with-push-protection-from-the-command-line#resolving-a-blocked-push        
+remote:             
+remote:             
+remote:       â€”â€” GitHub OAuth Access Token â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”        
+remote:        locations:        
+remote:          - commit: 48ba874cacc577af3132e4cdcd841f2a6b24bb92        
+remote:            path: UsersHunterAppDataLocalTemp.git-credentials:1        
+remote:             
+remote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.        
+remote:        https://github.com/Doctor0Evil/ALN_Programming_Language/security/secret-scanning/unblock-secret/31gUDAXEzBMLA06tUvKq92UaT5F        
+remote:             
+remote: 
+remote: 
+To https://github.com/Doctor0Evil/ALN_Programming_Language.git
+ ! [remote rejected] main -> main (push declined due to repository rule violations)
+error: failed to push some refs to 'https://github.com/Doctor0Evil/ALN_Programming_Language.git'
+git : warning: in the working copy of '.github/workflows/structure_validator.yml', CRLF will be replaced by LF the next time Git touches it
+At line:158 char:1
++ git add .github\workflows\structure_validator.yml
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[main d8ae26f] Add structure validator workflow for folders and files
+ 1 file changed, 44 insertions(+)
+ create mode 100644 .github/workflows/structure_validator.yml
+git : error: cannot pull with rebase: You have unstaged changes.
+At line:160 char:1
++ git pull --rebase origin main
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (error: cannot p...staged changes.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+error: please commit or stash them.
+git : remote: error: GH013: Repository rule violations found for refs/heads/main.        
+At line:161 char:1
++ git push origin main
++ ~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (remote: error: ...s/main.        :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+remote: 
+remote: - GITHUB PUSH PROTECTION        
+remote:   â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”        
+remote:     Resolve the following violations before pushing again        
+remote: 
+remote:     - Push cannot contain secrets        
+remote: 
+remote:             
+remote:      (?) Learn how to resolve a blocked push        
+remote:      https://docs.github.com/code-security/secret-scanning/working-with-secret-scanning-and-push-protection/working-with-push-protection-from-the-command-line#resolving-a-blocked-push        
+remote:             
+remote:             
+remote:       â€”â€” GitHub OAuth Access Token â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”        
+remote:        locations:        
+remote:          - commit: 48ba874cacc577af3132e4cdcd841f2a6b24bb92        
+remote:            path: UsersHunterAppDataLocalTemp.git-credentials:1        
+remote:             
+remote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.        
+remote:        https://github.com/Doctor0Evil/ALN_Programming_Language/security/secret-scanning/unblock-secret/31gUDAXEzBMLA06tUvKq92UaT5F        
+remote:             
+remote: 
+remote: 
+To https://github.com/Doctor0Evil/ALN_Programming_Language.git
+ ! [remote rejected] main -> main (push declined due to repository rule violations)
+error: failed to push some refs to 'https://github.com/Doctor0Evil/ALN_Programming_Language.git'

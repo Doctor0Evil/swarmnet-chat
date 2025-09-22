@@ -1,0 +1,9 @@
+<aananoswarm.quiz_construct>
+  parameters:
+    - mode: "quiz"
+    - topic: "Alliance Legal Compliance & Signal Integrity"
+    - questions: 20
+    - style: "infographic-research"
+    - return_embed: true
+    - callback: "/compliance_workflow/visual_embed"
+</aananoswarm.quiz_construct>

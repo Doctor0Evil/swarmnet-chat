@@ -1,0 +1,73 @@
+name: ALNFantasia Orchestration
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  ingest_and_validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Bit.Hub and dependencies
+        uses: actions/checkout@v4
+        with:
+          repository: Doctor0Evil/Bit.Hub
+      - name: Ingest and validate manifests (Lisp)
+        run: |
+          clisp scripts/tools/bit_ingest_validator.lisp ".bit"
+
+  api_error_triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Virta-Sys
+        uses: actions/checkout@v4
+        with:
+          repository: Doctor0Evil/Virta-Sys
+      - name: Automated API error triage (ALN)
+        run: |
+          aln modules/API_Error_Triage.aln triage_and_retry --context-aware --escalate-on-fail
+
+  auto_repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ALN_Programming_Language
+        uses: actions/checkout@v4
+        with:
+          repository: Doctor0Evil/ALN_Programming_Language
+      - name: Auto-repair malformed code/config (Lisp)
+        run: |
+          clisp scripts/tools/code_repair_bot.lisp src/ modules/
+
+  sync_docs_ci_artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Bit.Hub and ALN_Programming_Language
+        uses: actions/checkout@v4
+        with:
+          repository: Doctor0Evil/Bit.Hub
+      - name: Sync docs, CI artifacts, and code (ALN)
+        run: |
+          aln modules/Sync_Verify.aln sync_and_crosscheck docs/ ci/ src/
+
+  review_audit_loop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Bit.Hub, ALN_Programming_Language, and Virta-Sys
+        uses: actions/checkout@v4
+        with:
+          repository: Doctor0Evil/Bit.Hub
+      - name: Recursive code review & audit loop (Lisp)
+        run: |
+          clisp scripts/tools/review_audit_loop.lisp --recursive --suggest-workflows
+
+  compliance_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Bit.Hub
+        uses: actions/checkout@v4
+        with:
+          repository: Doctor0Evil/Bit.Hub
+      - name: Final compliance & deployment (ALN)
+        run: |
+          aln modules/Compliance_Deploy.aln deploy_with_audit --live --log

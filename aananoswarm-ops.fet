@@ -1,0 +1,4 @@
+for each definition in lookup("protected-layer", "aananoswarm-ops", swarmnet.aln):
+    if definition.is_protected and compliance_verified(definition):
+        op = construct(definition, sandbox="swarmnet", audit="enabled", rollback="ready")
+        deploy(op, monitor="continuous", layers="protected")

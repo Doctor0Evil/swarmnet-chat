@@ -1,0 +1,31 @@
+[Unit]
+Description=Bit.Hub Ethics Guard (ALN‑Enhanced)
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/srv/runner-repo
+ExecStart=/srv/runner-repo/tools/ethics-guard.sh .bit/environment.ethics.yml --aln-mode strict --export .bit/ethics_report.aln
+User=runner
+Group=runner
+
+# Systemd Security Hardening
+ProtectSystem=strict
+ProtectHome=true
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ReadOnlyPaths=/
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictRealtime=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+
+# ALN/Bit.Hub integration
+Environment=BIT_HUB_NODE_ID=selfhosted-runner-01
+Environment=ALN_COMPLIANCE_MODE=1
+Environment=ALN_FAILSAFE=1
+
+[Install]
+WantedBy=multi-user.target

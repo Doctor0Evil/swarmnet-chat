@@ -1,0 +1,44 @@
+<svg width="1100" height="680" viewBox="0 0 1100 680" xmlns="http://www.w3.org/2000/svg">
+  <!-- Workflow Nodes -->
+  <rect x="30" y="40" width="230" height="60" rx="12" fill="#E6F2FF" stroke="#2D59A6" stroke-width="2"/>
+  <text x="50" y="75" font-size="18" fill="#2D59A6">Aananoswarm Intake</text>
+  <rect x="300" y="40" width="240" height="60" rx="12" fill="#F7EEDF" stroke="#C4914E" stroke-width="2"/>
+  <text x="320" y="75" font-size="18" fill="#C4914E">Scope Definitions & Compliance</text>
+  <rect x="600" y="40" width="230" height="60" rx="12" fill="#ECFFE8" stroke="#319024" stroke-width="2"/>
+  <text x="610" y="75" font-size="18" fill="#319024">Swarm Legal Checks</text>
+  <rect x="30" y="150" width="230" height="60" rx="12" fill="#FFF4EF" stroke="#D15A2C" stroke-width="2"/>
+  <text x="50" y="185" font-size="18" fill="#D15A2C">Dynamic-Repar Trigger</text>
+  <rect x="300" y="150" width="240" height="60" rx="12" fill="#E4FDFF" stroke="#3796AB" stroke-width="2"/>
+  <text x="320" y="185" font-size="18" fill="#3796AB">Audit & Chain Revert</text>
+  <rect x="600" y="150" width="230" height="60" rx="12" fill="#F7FDE6" stroke="#A7C52D" stroke-width="2"/>
+  <text x="610" y="185" font-size="18" fill="#A7C52D">RAG Logging & Secure Build</text>
+  <rect x="180" y="270" width="580" height="60" rx="12" fill="#EAF3F9" stroke="#435A78" stroke-width="2"/>
+  <text x="240" y="305" font-size="18" fill="#435A78">Role Verification & Safe Distribution</text>
+  <rect x="330" y="370" width="290" height="60" rx="12" fill="#F2FFF9" stroke="#3CB187" stroke-width="2"/>
+  <text x="360" y="405" font-size="18" fill="#3CB187">Blockchain Anchor & Finalize Cycle</text>
+
+  <!-- Connectors/Arrows -->
+  <line x1="260" y1="70" x2="300" y2="70" stroke="#2D59A6" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="540" y1="70" x2="600" y2="70" stroke="#C4914E" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="145" y1="100" x2="145" y2="150" stroke="#2D59A6" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="170" y1="180" x2="300" y2="180" stroke="#D15A2C" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="540" y1="180" x2="600" y2="180" stroke="#3796AB" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="315" y1="210" x2="470" y2="270" stroke="#A7C52D" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="705" y1="210" x2="705" y2="270" stroke="#A7C52D" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="470" y1="330" x2="470" y2="370" stroke="#435A78" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Insertable Dynamic-Repair Web Elements (abstract icons/links) -->
+  <rect x="50" y="450" width="150" height="44" rx="8" fill="#FCF8F3" stroke="#915D3B" stroke-width="2"/>
+  <text x="70" y="478" font-size="15" fill="#915D3B">&lt;web_element&gt;Trigger Repar&lt;/web_element&gt;</text>
+  <rect x="250" y="450" width="200" height="44" rx="8" fill="#E7F7F8" stroke="#44889A" stroke-width="2"/>
+  <text x="265" y="478" font-size="15" fill="#44889A">&lt;fet_workflow&gt;Cycle Re-Audit&lt;/fet_workflow&gt;</text>
+  <rect x="480" y="450" width="220" height="44" rx="8" fill="#FCFDEE" stroke="#B7BF22" stroke-width="2"/>
+  <text x="495" y="478" font-size="15" fill="#B7BF22">&lt;swarm_mode&gt;Enforce New Policy&lt;/swarm_mode&gt;</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="8" refY="6"
+        orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 L6,6 L2,2" fill="#283A59"/>
+    </marker>
+  </defs>
+</svg>

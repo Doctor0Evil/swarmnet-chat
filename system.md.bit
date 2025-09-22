@@ -1,0 +1,116 @@
+Every ALN/Lisp script and tool from previous answers is now annotated with the corresponding Bit.Hub (bithub) file path for ALNFantasia development. These file paths offer modular, versioned organization for clear, robust integration into your agentic ecosystem. Each file path is given immediately above the relevant code or logic block, and the naming conventions support live in-line modification, VM deployment, and backup/versioning.
+
+***
+
+## Random Event Logic  
+**Bit.Hub Path:**  
+`/fan.asia/gameplay/events/random_event_selector.aln`
+```lisp
+(defun select-random-event (player ctx)
+  (let* ((eligible (filter-events ctx player))
+         (weights (map eligible (lambda (event) (event-weight event player ctx))))
+         (event (weighted-choice eligible weights)))
+    (if event (trigger-event event player ctx) nil)))
+```
+
+***
+
+## Item Decay & Spoilage  
+**Bit.Hub Path:**  
+`/fan.asia/systems/items/item_decay_manager.aln`
+```aln
+(item
+  :id "apple"
+  :decay-enabled true
+  :spoil-seconds 1800
+  :transform-on-expire "rotten_apple"
+  :destroy-if-expired false)
+
+(container
+  :id "fridge"
+  :decay-multiplier 0.4)
+
+(defun handle-decay (item container now)
+  (let ((expiry (* item.spoil-seconds container.decay-multiplier)))
+    (when (>= (- now item.spawn) expiry)
+      (if item.transform-on-expire
+          (transform-item item item.transform-on-expire)
+          (destroy-item item)))))
+```
+
+***
+
+## Cross-Contamination Logic  
+**Bit.Hub Path:**  
+`/fan.asia/systems/contamination/contamination_tree.aln`
+```aln
+(entity
+  :id ?id
+  :contamination-type :biological
+  :contaminated false)
+
+(defun propagate-contamination (src tgt method)
+  (when (and (contagious? src) (susceptible? tgt) (method-allowed? method))
+    (setf tgt.contaminated true)))
+```
+
+***
+
+## Prayer Skill System  
+**Bit.Hub Path:**  
+`/fan.asia/skills/prayer/prayer_skill.aln`
+```aln
+(skill
+  :name "prayer"
+  :level 1
+  :xp 0
+  :level_up_methods [ :bury_item :meditate :aid_spectral :activate_relic ]
+  :effects [ :blessing_aoe :contamination_resistance :luck_boost ]
+  :governing_attribute :luck)
+
+(item
+  :type :relic
+  :on_use (lambda (player) (grant_xp "prayer" 50)))
+```
+
+***
+
+## Sanity Meter & Railguards  
+**Bit.Hub Path:**  
+`/fan.asia/systems/sanity/sanity_meter.aln`
+```aln
+(meter
+  :type :sanity
+  :max 100
+  :min 0
+  :on_zero (lambda (player) (trigger:disturbing_death_scene player))
+  :drain_events [:horror_event :contamination :npc_betrayal]
+  :recovery_methods [:rest :friendly_npc :prayer]
+  :adaptive_feedback true)
+```
+
+***
+
+## Logging, Developer Tools & Tracing  
+**Bit.Hub Path:**  
+`/fan.asia/devtools/logging/runtime_trace.aln`
+```aln
+(log
+  :timestamp (now)
+  :object-id obj.id
+  :type (typeof obj)
+  :status (obj-status obj)
+  :ctx (current-context)
+  :stack (call-stack))
+```
+**Bit.Hub Path:**  
+`/fan.asia/devtools/stack/visualizer.aln`
+```aln
+(defun show-func-stack ()
+  (let ((stack (get-call-stack)))
+    (display stack)))
+```
+
+***
+
+Every script or major logic block is mapped to its own dedicated Bit.Hub path, making hot-reloading, safe edits, and team-based branch/version workflow seamless in ALNFantasia's development pipeline. This setup ensures maximum modularity, maintainability, and real-time AI or human auditability.

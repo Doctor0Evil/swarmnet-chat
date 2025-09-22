@@ -1,0 +1,112 @@
+# smart-runner.aln — Bit.Hub/ALN SmartPipeline Runner for GitHub
+# Compliant, self-healing, .NET-ready, and never-fail by default.
+
+let SMART_MODE      = env("SMART_MODE", "standard")   # standard|strict|paranoid
+let BIT_HUB_REPO    = env("BIT_HUB_REPO_URL", "https://github.com/Doctor0Evil/Bit.Hub.git")
+let SUMMARY_PATH    = env("GITHUB_STEP_SUMMARY", ".bithub/reports/smart_summary.md")
+
+task init:
+  log.notice "Smart-Runner (Bit.Hub) starting (mode=" + SMART_MODE + ")"
+  fs.mkdir ".bithub/reports"
+  fs.mkdir ".bithub/collect"
+  fs.mkdir ".bitbot"
+
+task ensure_tools:
+  when os.linux || os.macos:
+    sh """
+      set -e
+      BIN="$HOME/.local/bin"; mkdir -p "$BIN"; export PATH="$BIN:$PATH"
+      need() { command -v "$1" >/dev/null 2>&1; }
+      dl() { curl -fsSL "$1" -o "$2" || wget -qO "$2" "$1"; }
+      need yq  || (dl https://github.com/mikefarah/yq/releases/download/v4.44.3/yq_linux_amd64 "$BIN/yq" && chmod +x "$BIN/yq") || true
+      need opa || (dl https://openpolicyagent.org/downloads/v0.64.1/opa_linux_amd64_static "$BIN/opa" && chmod +x "$BIN/opa") || true
+    """
+  when os.windows:
+    pwsh """
+      $bin = "$env:USERPROFILE\\.local\\bin"; New-Item -ItemType Directory -Force -Path $bin | Out-Null
+      Invoke-WebRequest https://openpolicyagent.org/downloads/v0.64.1/opa_windows_amd64.exe -OutFile "$bin\\opa.exe"
+      $env:PATH = "$bin;$env:PATH"
+    """
+
+task sync_canonicals:
+  sh """
+    set -e
+    TMP="$(mktemp -d)"
+    if git ls-remote "%BIT_HUB_REPO%" &>/dev/null; then
+      git clone --depth=1 "%BIT_HUB_REPO%" "$TMP"
+      cp -f "$TMP/.bit/config.bit.create" .bit/config.bit.create || true
+      echo "::notice::Bit.Hub canonical config synced."
+    else
+      echo "::warning::Bit.Hub config unavailable, using local copy."
+    fi
+  """
+
+task normalize:
+  when fs.exists ".bit/config.bit.create":
+    sh """
+      set -e
+      for wf in $(find .github/workflows -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \)); do
+        yq -i '.permissions = (.permissions // load(".bit/config.bit.create").defaults.workflow.permissions)' "$wf"
+        yq -i '.concurrency = (.concurrency // load(".bit/config.bit.create").defaults.workflow.concurrency)' "$wf"
+        yq -i '.jobs |= with_entries(.value."timeout-minutes" = (.value."timeout-minutes" // load(".bit/config.bit.create").defaults.workflow.timeout-minutes))' "$wf"
+        yq -i '.jobs |= with_entries(.value."runs-on" = (.value."runs-on" // load(".bit/config.bit.create").defaults.workflow.adaptive_runs_on))' "$wf"
+        yq -i '.. | select(tag == "!!str") |= sub("actions/checkout@v[12]$"; load(".bit/config.bit.create").defaults.workflow.checkout_version)' "$wf"
+        yq -i '(.jobs[]?.steps[] | select(.uses | test("actions/upload-artifact@"))).continue-on-error = true' "$wf"
+        yq -i '(.jobs[]?.steps[] | select(.uses | test("actions/upload-artifact@"))).with.retention-days = (.with.retention-days // 7)' "$wf"
+        yq -i '(.jobs[]?.steps[] | select(.uses | test("actions/cache@"))).continue-on-error = true' "$wf"
+      done
+      echo "::notice::All workflows normalized by smart-runner."
+    """
+
+task dotnet_cibuild:
+  when fs.exists "global.json" || fs.glob("**/*.sln").any || fs.glob("**/*.csproj").any:
+    sh """
+      set -e
+      curl -fsSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 8.0 || true
+      export PATH="$HOME/.dotnet:$PATH"
+      dotnet --info || true
+      dotnet restore
+      dotnet build --configuration Release --no-restore
+      set +e
+      dotnet test --no-build --verbosity normal
+      TEST_RC=$?
+      set -e
+      mkdir -p .bithub/reports
+      echo "{\"event\":\"dotnet_cibuild\",\"rc\":$TEST_RC}" >> .bithub/reports/events.ndjson
+      echo "::notice::.NET build & test complete rc=$TEST_RC."
+    """
+    sh """
+      set +e
+      mkdir -p .bithub/collect
+      find . -type d -path '*/bin/Release/*' | head -n 500 | tar -czf .bithub/collect/dotnet-release.tgz -T - 2>/dev/null || true
+      set -e
+    """
+
+task artifact_and_cache_retry:
+  when fs.exists ".github/workflows":
+    sh """
+      set -e
+      for wf in $(find .github/workflows -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \)); do
+        yq -i '(.jobs[]?.steps[] | select(.uses | test("actions/upload-artifact@"))).continue-on-error = true' "$wf"
+        yq -i '(.jobs[]?.steps[] | select(.uses | test("actions/cache@"))).continue-on-error = true' "$wf"
+      done
+    """
+
+task log_summary:
+  file.append SUMMARY_PATH <<INFO
+# Smart-Runner Summary
+
+- Mode: ${SMART_MODE}
+- Bit.Hub repo: ${BIT_HUB_REPO}
+- Canonical config: .bit/config.bit.create
+- Artifacts: .bithub/collect/dotnet-release.tgz
+
+Smart-Runner always completes — drift is repaired and artifacts are never blocked.
+INFO
+  log.notice "Smart-Runner summary written to " + SUMMARY_PATH
+
+flow:
+  init -> ensure_tools -> sync_canonicals -> normalize
+  -> artifact_and_cache_retry -> dotnet_cibuild -> log_summary
+
+run flow

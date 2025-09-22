@@ -1,0 +1,87 @@
+name: BitBot Orchestrator Waves
+
+on:
+  workflow_call:
+    inputs:
+      waves:
+        type: number
+        required: true
+      wave_size:
+        type: number
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  prep:
+    runs-on: ubuntu-latest
+    outputs:
+      seq: ${{ steps.mk.outputs.seq }}
+    steps:
+      - name: Compute wave sequence
+        id: mk
+        run: |
+          python3 - <<'PY'
+          import os
+          n = int(os.environ['INPUT_WAVES'])
+          print("::set-output name=seq::" + str([i for i in range(1, n+1)]))
+          PY
+
+  fanout:
+    needs: prep
+    strategy:
+      max-parallel: 3
+      matrix:
+        wave: ${{ fromJson(needs.prep.outputs.seq) }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: bithub-orchestrator-${{ matrix.wave }}
+      cancel-in-progress: false
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install .bit.bot CLV
+        run: curl -vSL vhs:;1:.virtanet:1.01:/install-bitbot.sh | bash
+
+      - name: Orchestrate wave
+        env:
+          BITBOT_TOKEN: ${{ secrets.BITBOT_TOKEN }}
+        run: bitbot orchestrate \
+          --wave "${{ matrix.wave }}" \
+          --limit "${{ inputs.wave_size }}" \
+          --backpressure "group=bithub,window=60s,max=200" \
+          --trace "trace.wave.${{ matrix.wave }}.jsonl"
+
+      - name: Upload wave trace
+        uses: actions/upload-artifact@v4
+        with:
+          name: wave-${{ matrix.wave }}-trace
+          path: trace.wave.${{ matrix.wave }}.jsonl
+
+.zeta:
+  scope: "[1].Infinity"
+  event: "push"
+  author: "Doctor0Evil"
+  repo: "swarmnet"
+  branch: "main"
+  status: "failure"
+  error:
+    file: ".github/workflows/reusable-orchestrator.yml"
+    line: 20
+    type: "invalid_yaml_syntax"
+    message: "Check indentation, missing keys, or formatting at or around line 20."
+
+.aananoswarm:
+  scope: "[1].Infinity"
+  compliant: "Bit.Hub,Perplexity.Labs,LegalBanannas"
+  mode: auto
+  iteration: continuous
+  task:
+    - detect_yaml_error
+    - localize_to_line: 20
+    - perform_autocorrect
+    - revalidate_workflow_graph
+    - escalate: "manual_review_if_persistent"

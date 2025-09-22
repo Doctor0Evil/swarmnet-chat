@@ -1,0 +1,21 @@
+item_id: ARC-9241
+name: Wand of Recursive Truths
+category: Artifact
+rarity: Legendary
+variants:
+  - Color: Prism
+  - Upgrade: "Boundless Insight"
+description: >
+  This wand reveals the hidden recursion in any dilemma or code.
+effects:
+  - effect: "Reveal hidden quest logic"
+  - stat_bonus: "+7 Lore Mastery"
+  - usage: "One use per quest line"
+merchant_notes: "Handle with care—this one’s a mind-bender, mate."
+image: /assets/icons/wand_recursive_leg.png
+price_gp: 9800
+alt_price: "1x Enigma Token, Code Submission"
+stock_count: 2
+source: "Merchant Quest, World Boss Drop"
+unlock_hint: "Solve the Grimoire Puzzle of Loops"
+upgrade_path: [ARC-9242, ARC-9243]

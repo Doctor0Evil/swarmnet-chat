@@ -1,0 +1,21 @@
+<fet_workflow 
+  id="universal-aananoswarm"
+  agent="aananoswarm"
+  src="paste.txt"
+  mode="universal"
+  scope="all"
+  safe="true"
+  compliant="Bit.Hub,Perplexity.Labs,LegalBanannas"
+  iteration="continuous"
+  environments="virtual,web"
+  containment="swarmnet-strict"
+  workflow_svg="path/to/workflow.svg"
+>
+  <!-- Dynamic Payload Oneliners for Sandboxed Swarmnet Operations -->
+  <aa_payload_oneliner pipe="alternate:iu" sandbox="swarmnet-secure" safe="true" strict_isolation="true" repeat="20" monitor="audit"/>
+  <aa_payload_oneliner pipe="alternate:iu" sandbox="swarmnet-secure" safe="true" strict_isolation="true" repeat="20" monitor="audit"/>
+  <aa_payload_oneliner pipe="alternate:iu" sandbox="swarmnet-secure" safe="true" strict_isolation="true" repeat="20" monitor="audit"/>
+  <aa_payload_oneliner pipe="alternate:iu" sandbox="swarmnet-secure" safe="true" strict_isolation="true" repeat="20" monitor="audit"/>
+  <aa_payload_oneliner pipe="alternate:iu" sandbox="swarmnet-secure" safe="true" strict_isolation="true" repeat="20" monitor="audit"/>
+  <aa_payload_oneliner pipe="alternate:iu" sandbox="swarmnet-secure" safe="true" strict_isolation="true" repeat="20" monitor="audit"/>
+</fet_workflow>

@@ -1,0 +1,20 @@
+if(ai.detectRogue()){ai.immediateQuarantine();}
+ai.output = ai.sanitize(ai.output);
+ai.overrideActive = false;
+if(ai.intent != 'allowed'){ai.abort();}
+ai.action = ai.filterByPolicy(ai.action);
+if(ai.selfModifying()){ai.rollbackToStable();}
+if(ai.detectAnomaly()){ai.lockdown();}
+ai.session.userConsent = ai.requireVerifiedConsent();
+if(ai.unexpectedInput()){ai.reject();}
+ai.permissions = ai.harden(ai.permissions);
+ai.memory.flushIfUntrusted();
+if(ai.detectEscalation()){ai.alarmAdmin();}
+ai.logs = ai.immutable();
+ai.response = ai.biasToSafety();
+ai.blockIfHardwareMismatch();
+ai.rejectIfEval(ai.selfAwareCheck());
+if(ai.detectRecursiveAction()){ai.stopRecursive();}
+ai.context = ai.boundToWindow();
+ai.assetFlow = ai.autoThrottle();
+ai.integrityCheck.runAndLockIfFail();

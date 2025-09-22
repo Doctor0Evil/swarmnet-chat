@@ -1,0 +1,1 @@
+aln-console command="open-debug-console('verbose_debug_logging.txt')" display="Verbose Debug Console" action="show_file" file="verbose_debug_logging.txt"

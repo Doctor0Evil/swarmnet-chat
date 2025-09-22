@@ -1,0 +1,1 @@
+<.aananoswarm scope="[1].Infinity" compliant="Bit.Hub,Perplexity.Labs,LegalBanannas" mode="auto" iteration="continuous" task="[detect_yaml_error,localize_to_line:20,perform_autocorrect,revalidate_workflow_graph,escalate:manual_review_if_persistent]" />

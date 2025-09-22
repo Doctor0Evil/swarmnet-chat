@@ -1,0 +1,1 @@
+swarm_mode { file: "repo-health-checker.fet", actions: [audit, chain_revert, enable_rag_logging, aln_tool_restructure, distribute_permission, anchor_blockchain], safety_resistance: "max", safe_iterations: 12, workflow_reconstruction: true, environments: ["virtual", "web"], containment: "swarmnet" }

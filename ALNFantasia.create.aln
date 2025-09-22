@@ -1,0 +1,112 @@
+// === ALNFantasia World Universe Specification ===
+@aln.bit.create {
+    id: "fantasia.world.universe"
+    version: "1.0"
+    description: "ALNFantasia canonical universe file for AI, engine, and procedural lore orchestration"
+    author: "ALN Collective"
+    created: "2025-08-30T08:16:00-07:00"
+    license: "MIT"
+    sync: ["https://github.com/Doctor0Evil/ALN_Programming_Language.git"]
+    dependencies: [
+        "lisp.alnfantasia.bit",
+        "survival.mechanic.gd",
+        "dice.engine.bit",
+        "contamination.logic.bit"
+    ]
+    meta {
+        seed: 19384712
+        deterministic: true
+        rules_engine: "lisp.alnfantasia.bit"
+        time_epoch: "Cycle_Zero"
+    }
+    hooks {
+        @on_boot: "alnfantasia.intro"
+        @on_tick: "world.tick.interval"
+        @on_event: "lisp.events.dispatch"
+    }
+}
+
+@lisp.alnfantasia.bit {
+    ;; === Lisp-Style Universe Definition & Logic ===
+    (defun universe-init ()
+      (progn
+        (setf *world-title* "Fantasia Prime")
+        (setf *cycle* 0)
+        (setf *world-seed* 19384712)
+        (setf *main-regions* '("Arroyo" "Vault-23" "Narrowlands" "AetherGate" "Spectral Dunes"))
+        (setf *bases* '((:name "Sanctuary" :type "SafeZone" :coords (12 9))))
+        (setf *hazards* '("parasitic_spores" "blood_rain" "ghost_wind" "aberration"))
+        (setf *survival-systems* t)
+        (setf *contamination* t)
+        ;; Boot event bindings
+        (world-bind 'on-startup #'boot-lore)
+        (world-bind 'on-tick #'tick-logic)
+        (world-bind 'on-event #'event-dispatch)
+        (log "Universe initialized: Fantasia Prime"))
+    )
+
+    (defun boot-lore ()
+      (progn
+        (roll-dice :sides 20)
+        (summon-event "world.birth" :region "Arroyo"))
+    )
+
+    (defun tick-logic (&optional (cycle *cycle*))
+      ;; Each tick: advance systems, propagate events, decay/contam/ai update
+      (world-decay-update)
+      (contamination-update)
+      (ai-behavior-update)
+      (incf *cycle*))
+    
+    (defun event-dispatch (evt)
+      (case evt
+        ("world.birth" (log "The mists part. The Chosen awakens."))
+        ("contamination.outbreak" (spawn-outbreak))
+        (t (log (format nil "Unhandled event: ~A" evt))))
+    )
+}
+
+@universe.policies {
+    ;; Policy blocks for compliance, governance, and creative safety nets
+    creativity: "event-driven, branching"
+    performance: "event-batch, capped per-frame"
+    compliance: ["MIT_License", "GDPR", "AI_Role_Log"]
+    policy-blocks: [
+        { event: "contamination.propagate", max-depth: 3 },
+        { event: "decay.spread", throttle: "5 per tick" }
+    ]
+}
+
+@world.registry {
+    ;; Placeholder for all region, site, faction, and lore-object registration
+    regions: [
+        { id: "arroyo", type: "village", ai_influence: "low", climate: "arid" },
+        { id: "aethergate", type: "portal", ai_influence: "high", climate: "fractal" }
+    ]
+    factions: [
+        { id: "Elders", alignment: "neutral" },
+        { id: "Spectral Legion", alignment: "chaotic" }
+    ]
+    hazards: [
+        { id: "corruption", vector: "water", intensity: 0.7 },
+        { id: "radioactivity", vector: "wind", intensity: 0.4 }
+    ]
+    ai_agents: [
+        { id: "Caretaker", logic: "guard, quarantine", region: "Sanctuary" }
+    ]
+}
+
+@savepoint universe_init {
+    ;; Enables save/resume for world or AI/agency replay
+    epoch: "Cycle_Zero"
+    hash: "sha3-256:b45d374b..."
+    valid: true
+}
+
+@/docstring {
+    Canonical ALNFantasia world.universe file.
+    - Modular: links survival, contamination, dice, and policy engines.
+    - Extensible: new events, zones, or factions can be grafted at runtime.
+    - Secure: full agent log, audit, and deterministic replay support.
+    - MIT: All contributors and source files must respect repo attributions.
+}

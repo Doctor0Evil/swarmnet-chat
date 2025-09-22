@@ -1,0 +1,8 @@
+{
+  "access": "restricted",
+  "org": "Perplexity.Labs",
+  "license": "UNLICENSED",
+  "require_auth": true,
+  "permitted_users": [ "owner", "system" ],
+  "audit_log_enabled": true, immutable
+}

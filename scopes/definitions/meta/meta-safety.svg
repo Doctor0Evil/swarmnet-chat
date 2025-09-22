@@ -1,0 +1,23 @@
+<!-- BLICKICE Meta-Safety Module: AUTOFIX -->
+<blickice-core
+    status="active"
+    watch="Data.Bank"
+    enforce="fail-closed"
+    immutable-audit="on"
+    balance-monitor="auto"
+    asset-throttle="on"
+    asset-integrity-check="continuous"
+    auto-heal="enabled"
+    rollback="auto"
+    escalation-trigger="worst_case_math"
+    threat-level="escalate-on-anomaly"
+    external-access="deny"
+    incident-report="instant"
+    state-lock="ENFORCED"
+    flags="NO_BLINK, NO_WRITE, READONLY_ON_FAIL, ERR_TRAP"
+>
+  <!-- BLICKICE repairs instability and balances all asset-flows.
+       All movement/actions logged, anomalous movements trigger fail-closed snap.
+       If asset-bank state is flagged UNSTABLE: transitions to READONLY, runs integrity repair, then revalidates.
+       BLICKICE auto-redeploys itself if mutated, deleted, or logic fault detected.  -->
+</blickice-core>

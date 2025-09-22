@@ -1,0 +1,144 @@
+name: BitBot MegaStructure Bridge
+
+on:
+  repository_dispatch:
+    types: [MEGASTRUCTURE_KICKOFF]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  BITBOT_ARTIFACT: build.artifact.bit
+  BITBOT_CACHE_DIR: .bit/cache
+  BITHUB_TRACE_FILE: trace.jsonl
+  BITHUB_AUDIT_DIR: .bit/audit
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq yamllint
+          curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64
+          chmod +x opa && sudo mv opa /usr/local/bin/opa
+
+      - name: Restore cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.BITBOT_CACHE_DIR }}
+          key: bitbot-megastructure-${{ github.sha }}
+          restore-keys: |
+            bitbot-megastructure-
+
+      - name: Build MegaStructure
+        run: |
+          set -euo pipefail
+          mkdir -p "${BITBOT_CACHE_DIR}" "${BITHUB_AUDIT_DIR}"
+          ./scripts/build-megastructure.sh --output "${BITBOT_CACHE_DIR}/${BITBOT_ARTIFACT}"
+
+      - name: Verify integrity
+        run: |
+          set -euo pipefail
+          test -s "${BITBOT_CACHE_DIR}/${BITBOT_ARTIFACT}"
+          sha256sum "${BITBOT_CACHE_DIR}/${BITBOT_ARTIFACT}" | tee "${BITHUB_AUDIT_DIR}/${BITBOT_ARTIFACT}.sha256"
+
+      - name: Lint platform spec (optional)
+        run: |
+          if [ -f ".bit/platform.yaml" ]; then
+            yamllint .bit/platform.yaml | tee "${BITHUB_AUDIT_DIR}/yamllint.txt"
+          fi
+
+      - name: Generate Bit.Hub context.json
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' > .bit/context.json
+          import os, json, yaml, hashlib
+          platform = {}
+          p = ".bit/platform.yaml"
+          if os.path.exists(p):
+              import sys
+              platform = yaml.safe_load(open(p))
+          ctx = {
+              "repo": {
+                  "owner": os.environ.get("GITHUB_REPOSITORY","").split("/")[0],
+                  "name": os.environ.get("GITHUB_REPOSITORY","").split("/")[-1],
+                  "ref": os.environ.get("GITHUB_REF"),
+                  "sha": os.environ.get("GITHUB_SHA"),
+                  "run_id": os.environ.get("GITHUB_RUN_ID"),
+                  "event": os.environ.get("GITHUB_EVENT_NAME"),
+              },
+              "artifact": {
+                  "path": os.path.join(".bit","cache", os.environ.get("BITBOT_ARTIFACT","build.artifact.bit"))
+              }
+          }
+          os.makedirs(".bit", exist_ok=True)
+          json.dump(ctx, open(".bit/context.json","w"), indent=2)
+          PY
+          cat .bit/context.json
+
+      - name: OPA gate
+        id: opa
+        run: |
+          set -euo pipefail
+          if [ -d ".bit/policy" ]; then
+            opa eval -f json -d .bit/policy -i .bit/context.json "data.bithub.denies" \
+              | tee "${BITHUB_AUDIT_DIR}/opa_denies.json"
+            opa eval -f json -d .bit/policy -i .bit/context.json "data.bithub.allow" \
+              | tee "${BITHUB_AUDIT_DIR}/opa_allow.json"
+            DENIES=$(jq '[..|.[]?] | length' "${BITHUB_AUDIT_DIR}/opa_denies.json" || echo 0)
+            echo "denies_count=${DENIES}" >> $GITHUB_OUTPUT
+            if [ "${DENIES:-0}" -gt 0 ]; then
+              echo "Policy denies detected: ${DENIES}"; exit 2
+            fi
+          else
+            echo "No .bit/policy present; soft-allow."
+            echo "denies_count=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Save cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.BITBOT_CACHE_DIR }}
+          key: bitbot-megastructure-${{ github.sha }}
+
+      - name: Upload artifact to GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BITBOT_ARTIFACT }}
+          path: ${{ env.BITBOT_CACHE_DIR }}/${{ env.BITBOT_ARTIFACT }}
+
+      - name: Publish to Bit.Hub + sticky trigger
+        if: steps.opa.outputs.denies_count == '0'
+        env:
+          BITBOT_TOKEN: ${{ secrets.BITBOT_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl -sSL https://bithub.example.com/install-bitbot.sh | bash
+          bitbot push \
+            --artifact "${BITBOT_CACHE_DIR}/${BITBOT_ARTIFACT}" \
+            --trace "${BITHUB_AUDIT_DIR}/push.trace.jsonl" \
+            --sticky-trigger "github:${GITHUB_RUN_ID}"
+
+      - name: Upload audit bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bithub-audit-${{ github.run_id }}
+          path: |
+            ${{ env.BITHUB_AUDIT_DIR }}/
+            .bit/context.json
+
+      - name: Trigger orchestrator waves
+        if: success()
+        uses: ./.github/workflows/reusable-orchestrator.yml
+        with:
+          waves: 6
+          wave_size: 250
