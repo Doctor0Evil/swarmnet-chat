@@ -1,0 +1,5 @@
+asset "knight.gif" {
+    type: "animated_gif",
+    description: "Animated pixel-art knight piece for Battlechess",
+    path: "./knight.gif"
+}

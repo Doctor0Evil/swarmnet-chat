@@ -1,0 +1,158 @@
+// .aln SCRIPT INITIATED: Comet-Browser Flag Manifest v1.0
+// PROTOCOL DESIGNATION: The Bern Doctrine - Browser Integrity & Compliance Map
+// STATUS: ALWAYS-ACTIVE & ENFORCED
+
+package comet_browser.flag_manifest
+import nano_safety.cognitive_sovereignty
+import vsc.artemis.enterprise_secure.compliance
+
+// ==========================================================================
+// PREAMBLE:
+// This document is the master configuration for all experimental flags
+// within the Comet-Browser environment. Each flag's state is perpetually
+// monitored and enforced by the LegalBanannaBern vector to ensure that
+// security, privacy, and Alliance compliance are never compromised.
+// Unauthorized changes to this manifest are a Level-3 policy violation.
+// ==========================================================================
+
+object CometBrowser_Flag_Manifest {
+
+    // ----------------------------------------------------------------------
+    // SECTION I: SECURITY, PRIVACY & IDENTITY
+    // Flags governing cryptographic resilience, data protection, and user identity.
+    // ----------------------------------------------------------------------
+    object Security_And_Privacy {
+        data Flag_WebRTC_PQC_for_DTLS {
+            id = "webrtc-pqc-for-dtls";
+            title = "WebRTC PQC for DTLS";
+            [cite_start]description = "Enables Post-Quantum Cryptography for DTLS in WebRTC communications."[cite: 1];
+            status = "Enabled";
+            // Compliance Note: MANDATORY. Per Alliance treaty on future-proof communications, all real-time data streams must be secured against quantum threats.
+        }
+
+        data Flag_Anonymize_Local_IPs_by_WebRTC {
+            id = "enable-webrtc-hide-local-ips-with-mdns";
+            title = "Anonymize local IPs exposed by WebRTC";
+            [cite_start]description = "Conceals local IP addresses with mDNS hostnames to prevent network fingerprinting."[cite: 1];
+            status = "Enabled";
+            // Compliance Note: Upholds the right to privacy by default. Anonymization is a core tenet of the Cognitive Sovereignty charter.
+        }
+        
+        data Flag_Enterprise_File_Obfuscation {
+            id = "enterprise-file-obfuscation";
+            title = "Enterprise File Obfuscation";
+            [cite_start]description = "Enables temporary file obfuscation during download for enterprise users, preventing access before deep scanning is complete."[cite: 1];
+            status = "Enabled";
+            // Compliance Note: Critical for enterprise data integrity. All assets are considered "quarantined" until cleared by forensic analysis.
+        }
+
+        data Flag_Site_Isolation_Opt_Out {
+            id = "site-isolation-trial-opt-out";
+            title = "Disable site isolation";
+            [cite_start]description = "Disables site isolation. Intended for diagnosing bugs. Disables important mitigations for Spectre CPU vulnerability."[cite: 1];
+            status = "Default";
+            // Compliance Note: DISCOURAGED. [cite_start]Disabling this requires a formal security waiver co-signed by Alliance Command due to significant security risks[cite: 1].
+        }
+        
+        data Flag_IP_Protection_Proxy_Opt_Out {
+            id = "ip-protection-proxy-opt-out";
+            title = "Disable IP Protection Proxy";
+            [cite_start]description = "Prevents use of the IP Protection proxy. Intended for diagnosing issues."[cite: 1];
+            status = "Default";
+             // Compliance Note: Overridden by Alliance network policies which mandate IP protection unless a session-specific legal warrant is provided.
+        }
+        
+        // ... [Includes all other security and privacy-related flags from the source] ...
+    }
+
+    // ----------------------------------------------------------------------
+    // SECTION II: AI & MACHINE LEARNING KERNELS
+    // Flags related to on-device and integrated AI models. Governed by the
+    // strictest Cognitive Sovereignty and BCI regulations.
+    // ----------------------------------------------------------------------
+    object AI_And_Machine_Learning_Kernels {
+        data Flag_Prompt_API_for_Gemini_Nano {
+            id = "prompt-api-for-gemini-nano";
+            title = "Prompt API for Gemini Nano";
+            [cite_start]description = "Enables the exploratory Prompt API, allowing natural language instructions to a built-in large language model."[cite: 1];
+            status = "Default";
+            // Compliance Note: Governed by the Cognitive Sovereignty Charter. All AI outputs are sandboxed and subject to forensic logging. [cite_start]Prohibited Use Policy [cite: 1] is enforced by the Bern Doctrine. [cite_start]Not suitable for use cases requiring factual accuracy[cite: 1].
+        }
+        
+        data Flag_Client_Side_Detection_Brand_and_Intent {
+            id = "client-side-detection-brand-and-page-intent";
+            title = "Client Side Detection Brand and Intent for Scam Detection";
+            [cite_start]description = "Enables on-device LLM output on pages to inquire for brand and intent of the page."[cite: 1];
+            status = "Enabled";
+            // Compliance Note: Approved for proactive threat mitigation. All inferences are logged and subject to fairness audits to prevent biased classification.
+        }
+
+        // ... [Includes all other AI and ML-related flags] ...
+    }
+    
+    // ----------------------------------------------------------------------
+    // SECTION III: ALLIANCE & ENTERPRISE INTEGRATION
+    // Flags for integrating with enterprise and Alliance-level systems.
+    // ----------------------------------------------------------------------
+    object Alliance_And_Enterprise_Integration {
+        data Flag_Perplexity_Backend_Url {
+            id = "perplexity-backend-url";
+            title = "Perplexity Backend Url";
+            [cite_start]description = "Overrides the backend url for all browser components. Defaults to production."[cite: 1];
+            status = "Disabled";
+            // Compliance Note: Modifying this URL requires Class-5 clearance and a signed directive from Alliance Command. All traffic must be routed through sanctioned, forensically-monitored endpoints.
+        }
+
+        data Flag_Perplexity_Autoupdate_Comet {
+            id = "perplexity-autoupdate";
+            title = "Perplexity Autoupdate Comet";
+            [cite_start]description = "Enables auto-updating of Comet Browser and sub-components."[cite: 1];
+            status = "Default";
+            // Compliance Note: All updates are cryptographically signed by the Alliance. The manifest for each update is pre-submitted to CIA-Forensics for security validation before deployment.
+        }
+        
+        data Flag_Enable_Enterprise_Profile_Badging {
+            id = "enable-enterprise-profile-badging-for-avatar";
+            title = "Enable enterprise profile badging on the avatar";
+            [cite_start]description = "Enables enterprise profile badging on the toolbar avatar."[cite: 1];
+            status = "Enabled";
+             // Compliance Note: Ensures clear visual distinction between personal and enterprise-managed environments, a key requirement for data segregation policies.
+        }
+
+        // ... [Includes all other enterprise-related flags] ...
+    }
+    
+    // ----------------------------------------------------------------------
+    // SECTION IV: RENDERING & PERFORMANCE
+    // Flags governing the GPU, compositor, and rendering pipeline.
+    // ----------------------------------------------------------------------
+    object Rendering_And_Performance {
+        data Flag_Ignore_GPU_Blocklist {
+            id = "ignore-gpu-blocklist";
+            title = "Override software rendering list";
+            [cite_start]description = "Overrides the built-in software rendering list and enables GPU-acceleration on unsupported system configurations."[cite: 1];
+            status = "Enabled";
+            // Compliance Note: Use is logged. Any system instability resulting from this override is the operator's liability, though the Forgiveness and Error Correction protocol may apply.
+        }
+
+        // ... [Includes all other rendering and performance-related flags] ...
+    }
+    
+    // ----------------------------------------------------------------------
+    // SECTION V: WEB PLATFORM APIS & EXPERIMENTAL FEATURES
+    // Flags that enable developmental or non-standard web features.
+    // ----------------------------------------------------------------------
+    object Web_Platform_APIs_And_Experimental_Features {
+        data Flag_Experimental_Web_Platform_Features {
+            id = "enable-experimental-web-platform-features";
+            title = "Experimental Web Platform features";
+            [cite_start]description = "Enables experimental Web Platform features that are in development."[cite: 1];
+            status = "Enabled";
+            // Compliance Note: All APIs activated under this flag are considered "legally volatile" and operate in a sandboxed permission model. Use in production environments is a policy violation unless explicitly sanctioned for a specific mission.
+        }
+
+        // ... [Includes all other experimental and API-related flags] ...
+    }
+    
+    // ... [Sections for "Network_And_Connectivity", "Developer_Tools_And_Debugging", "User_Interface_And_Experience", etc., would follow, detailing every remaining flag in a similar structured and legally-annotated format to provide a complete manifest.] ...
+}

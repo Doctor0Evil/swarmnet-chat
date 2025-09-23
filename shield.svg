@@ -1,0 +1,5 @@
+<!-- shield.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <path d="M32 4 L60 20 V38 C60 53 43 60 32 60 19 60 4 53 4 38 V20 Z" fill="#2171b5" stroke="#123766" stroke-width="2"/>
+  <text x="32" y="44" text-anchor="middle" font-size="14" fill="#fff" font-family="Arial">ALLY</text>
+</svg>

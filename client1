@@ -1,0 +1,43 @@
+// .aa Web3 Asset Automata: Fetch.ai Safe Deleveraging
+asset "Web3ComplianceGuard" {
+    version: "1.0.0"
+    author: "Alliance Automata"
+
+    onInit() {
+        // Initialize compliance state and auditing
+        setState("compliance", true)
+        setState("auditLog", [])
+    }
+
+    onAccess(request) {
+        if !request.device.isRegistered {
+            setState("compliance", false)
+            pushState("auditLog", {event: "Non-Compliant Device", time: now()})
+            return deny("Device not registered for access.")
+        }
+        if !request.intentDeclaration.isValid {
+            setState("compliance", false)
+            pushState("auditLog", {event: "Intent Declaration Failure", time: now()})
+            return deny("Intent-to-Access required.")
+        }
+        // All other access is logged
+        pushState("auditLog", {event: "Compliant Access", actor: request.actor, time: now()})
+        return approve()
+    }
+
+    onViolation(trigger) {
+        // Automated legal escalation for honeypot triggers
+        quarantine(trigger.actor)
+        preserveEvidence(trigger)
+        forwardToAllianceLegal(trigger)
+        flagActor(trigger.actor, "Hostile - Under Legal Review")
+        pushState("auditLog", {event: "Violation Triggered", detail: trigger, time: now()})
+    }
+
+    onDeleveraging() {
+        // Secure offboarding: revoke permissions, archive logs, broadcast compliance update
+        setState("compliance", false)
+        archive("auditLog")
+        notifyNetwork("Asset deleveraged & secured per Alliance protocol.")
+    }
+}

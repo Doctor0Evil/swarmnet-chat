@@ -1,0 +1,10 @@
+***
+
+### File 3: `.cometbrowser/data/compliance_schema.csv`
+
+```csv
+Timestamp,LawID,FunctionName,Operator,AssetID,EventType,Enforcement,Outcome,HashedSignature,ComplianceResult
+2025-09-19T03:45:18.272107,MetaLaw,RepairAssetCluster,Node-47A,Asset-301X,Violation,"Quarantine, Automated ARB-AI",Partial,9bff4b58f47096d979716469a5032cdc046a20a6b6ba474a2b5c622b69e3aa49,Noncontradiction Failure
+2025-09-19T03:45:18.272163,Law[3.01],UserTokenExtraction,Node-7B9,Asset-A765,Repair,Operator Arbitration,Success,785256d2823b53f63fd3e1354c0da274c1cfca7327ceec79cb7895b2e798f72a,Consent Affirmed
+2025-09-19T03:45:18.272168,Law[6.01],ResourceMonitor,PlanetaryNode-ZX6,Resource-LocalWater,Violation,Planetary Oversight Board,Failure,59391352dc5e705ffc051caa365acd586069dcc1f5228d181af62397b1673384,Resource Overdraw
+2025-09-19T03:45:18.272171,Law[7.02],SignalBeaconAudit,CosmicNode-88,Signal-XUltra,Violation,Cosmic AI Trust Servers,Success,adad947f5b20a3c0c85fc610605dda37c2c08e557ee0232a4c2e276ca922132d,Signal Cleared

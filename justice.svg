@@ -1,0 +1,7 @@
+<!-- justice.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <ellipse cx="32" cy="32" rx="28" ry="26" fill="#e24a4b"/>
+  <rect x="28" y="18" width="8" height="28" fill="#fff"/>
+  <path d="M24 44 Q32 56 40 44" stroke="#fff" stroke-width="2" fill="none"/>
+  <text x="32" y="24" text-anchor="middle" font-size="15" fill="#fff" font-family="Arial">JUSTICE</text>
+</svg>

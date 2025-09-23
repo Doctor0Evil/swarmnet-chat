@@ -1,0 +1,19 @@
+asset_index "Battlechess_Icons" {
+    assets: [
+        "ai-logo-color.svg",
+        "rook.png",
+        "bishop.png",
+        "knight.png",
+        "shield.svg",
+        "justice.svg",
+        "intel.svg",
+        "commander_badge.svg"
+    ],
+    path: "./"
+}
+
+asset_fetcher "fetch_icon" {
+    input: "icon_name",
+    from: "Battlechess_Icons.assets",
+    output: "absolute_path"
+}

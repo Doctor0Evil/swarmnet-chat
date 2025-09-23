@@ -1,0 +1,58 @@
+battle_royale_game "Command & Ally: Battlechess Royale" {
+    mode: "AI-Chat Platform",
+    data_integrity: "public_verified_assets",
+    compliance: "active",
+    logging: "workflow_log",
+    player_types: ["Commander", "Agent", "Analyst", "Ally", "Civil_Justice_Observer"],
+    ai_agents: ["Gemini", "Perplexity", "Grok", "ChatNative86"],
+    max_players: 8,
+    royale_mode: true,
+
+    board_setup {
+        shape: "multi-zone chess arena",
+        entry_points: 4,
+        team_count: "2-4",
+        color_palette: "vivid, open-source",
+        icons: [
+            "/icons8/ai-logo-color.svg",
+            "/pixel-assets/rook.gif",
+            "/pixel-assets/bishop.gif",
+            "/pixel-assets/knight.gif",
+            "/giphy/powerup-win.gif",
+            "/battle-assets/tank.png",
+            "/battle-assets/radar-animated.png"
+        ],
+        overlays: [
+            "/branding/comet-logo.svg",
+            "/badge/alliance-badge.svg"
+        ],
+        avatar_sets: [
+            "/avatars/commander.png",
+            "/avatars/analyst.png",
+            "/avatars/agent.png",
+            "/avatars/civil_observer.png"
+        ]
+    }
+
+    game_logic {
+        battle-chess_rules: "chess + real-time move queue",
+        resource_actions: {
+            currency: ["deploy", "upgrade", "repair"],
+            energy: ["rush", "fortify", "scan"],
+            powerups: ["giphy:powerup-win.gif", "giphy:radar-pulse.gif"]
+        },
+        special-squares: [
+            "ally-safe": "/icons/shield.svg",
+            "intel-drop": "/icons/intel.svg",
+            "justice-zone": "/icons/justice.svg"
+        ],
+        workflow_triggers: {
+            on_move: "log event",
+            on_powerup: "run workflow_script",
+            on_player_elimination: "auto-repair active workflow",
+            on_observer: "display civil-justice badge",
+            on_alert: "show animated radar overlay"
+        },
+        compliance_checks: "on every workflow event"
+    }
+}

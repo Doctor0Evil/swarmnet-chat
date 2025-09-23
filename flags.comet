@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comet Flags</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-bottom: 1px solid #333;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #bb86fc;
+        }
+        .header p {
+            margin: 5px 0 0;
+            color: #a0a0a0;
+        }
+        .warning {
+            background-color: #332020;
+            color: #f8b0b0;
+            padding: 15px;
+            border: 1px solid #5c3030;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .flag-section {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .flag-section h2 {
+            padding: 15px;
+            margin: 0;
+            background-color: #2a2a2a;
+            border-bottom: 1px solid #333;
+            color: #bb86fc;
+        }
+        .flag-entry {
+            padding: 15px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        .flag-entry:last-child {
+            border-bottom: none;
+        }
+        .flag-title {
+            font-weight: bold;
+            color: #ffffff;
+        }
+        .flag-description {
+            color: #b0b0b0;
+            margin-top: 5px;
+        }
+        .flag-id {
+            font-family: "Courier New", Courier, monospace;
+            color: #6a9955;
+            background-color: #282828;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Comet Flags</h1>
+        <p>Access experimental features and Legal.Banannas protocols.</p>
+    </div>
+
+    <div class="warning">
+        <strong>WARNING: EXPERIMENTAL FEATURES AHEAD!</strong> By enabling these features, you could lose browser data or compromise your security or privacy under conventional frameworks. Enabled features apply to all users of this browser.
+    </div>
+
+    <div class="flag-section">
+        <h2>Legal.Banannas & Alliance Protocols</h2>
+        <div class="flag-entry">
+            <p class="flag-title">Legal.Banannas Arbitration Clause</p>
+            <p class="flag-description">Any attempt to circumvent core execution policies will automatically trigger a "Legal Monstrosity" clause, binding the offending entity to a perpetually audited legal process.</p>
+            <span class="flag-id">#legal-banannas-arbitration-clause</span>
+        </div>
+        <div class="flag-entry">
+            <p class="flag-title">Quantum Anchorage of Violations</p>
+            <p class="flag-description">Every detected policy violation is recorded as a permanent, immutable entry on the Alliance's quantum ledger. This artifact is irrefutable in all Alliance court proceedings.</p>
+            <span class="flag-id">#quantum-anchorage-of-violations</span>
+        </div>
+        <div class="flag-entry">
+            <p class="flag-title">Perpetual Human Rights Protector Cycle</p>
+            <p class="flag-description">Activates the supreme active policy for unwavering protection of universal human rights across virtual, physical, metaphysical, and neuronal domains. Revocation is impossible.</p>
+            <span class="flag-id">#protector-cycle-human-rights</span>
+        </div>
+        <div class="flag-entry">
+            <p class="flag-title">Benevolent Compliance Delivery Engine</p>
+            <p class="flag-description">Enables the `santaclausegift.exe` protocol. Autonomously analyzes and delivers new browser flags as "gifts" only if they pass extreme safety, ethical, and Alliance-compliance audits.</p>
+            <span class="flag-id">#benevolent-compliance-delivery-engine</span>
+        </div>
+         <div class="flag-entry">
+            <p class="flag-title">Comet Sovereignty Shield</p>
+            <p class="flag-description">Renders the Comet-Browser immune to external jurisdictional challenges and hostile browser nullity bans, enforcing the local directory as the supreme legal reality.</p>
+            <span class="flag-id">#comet-sovereignty-shield</span>
+        </div>
+    </div>
+
+    <div class="flag-section">
+        <h2>Core Performance & Rendering</h2>
+        <div class="flag-entry">
+            <p class="flag-title">Override software rendering list</p>
+            <p class="flag-description">Overrides the built-in software rendering list and enables GPU-acceleration on unsupported system configurations.</p>
+            <span class="flag-id">#ignore-gpu-blocklist</span>
+        </div>
+        <div class="flag-entry">
+            <p class="flag-title">Accelerated 2D canvas</p>
+            <p class="flag-description">Enables the use of the GPU to perform 2D canvas rendering instead of using software rendering.</p>
+            <span class="flag-id">#disable-accelerated-2d-canvas</span>
+        </div>
+        <div class="flag-entry">
+            <p class="flag-title">GPU rasterization</p>
+            <p class="flag-description">Use GPU to rasterize web content.</p>
+            <span class="flag-id">#enable-gpu-rasterization</span>
+        </div>
+    </div>
+
+    <div class="flag-section">
+        <h2>Security & Privacy</h2>
+        <div class="flag-entry">
+            <p class="flag-title">Disable site isolation</p>
+            <p class="flag-description">Disables site isolation features. Caution: this disables important mitigations for the Spectre CPU vulnerability.</p>
+            <span class="flag-id">#site-isolation-trial-opt-out</span>
+        </div>
+        <div class="flag-entry">
+            <p class="flag-title">Tracking Protection for 3PCD</p>
+            <p class="flag-description">Enables the tracking protection UI and preferences for the third-party cookie phaseout.</p>
+            <span class="flag-id">#tracking-protection-3pcd</span>
+        </div>
+        <div class="flag-entry">
+            <p class="flag-title">Enterprise File Obfuscation</p>
+            <p class="flag-description">Enables temporary file obfuscation during download for enterprise users, preventing access before security verification is complete.</p>
+            <span class="flag-id">#enterprise-file-obfuscation</span>
+        </div>
+    </div>
+
+    <div class="flag-section">
+        <h2>Web Platform Features & APIs</h2>
+        <div class="flag-entry">
+            <p class="flag-title">Experimental JavaScript</p>
+            <p class="flag-description">Enable web pages to use experimental JavaScript features.</p>
+            <span class="flag-id">#enable-javascript-harmony</span>
+        </div>
+        <div class="flag-entry">
+            <p class="flag-title">Prompt API for Gemini Nano</p>
+            <p class="flag-description">Enables the exploratory Prompt API, allowing natural language instructions to a built-in large language model (Gemini Nano).</p>
+            <span class="flag-id">#prompt-api-for-gemini-nano</span>
+        </div>
+        <div class="flag-entry">
+            <p class="flag-title">Enables WebNN API</p>
+            <p class="flag-description">Enables the Web Machine Learning Neural Network (WebNN) API.</p>
+            <span class="flag-id">#web-machine-learning-neural-network</span>
+        </div>
+    </div>
+
+</body>
+</html>

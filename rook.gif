@@ -1,0 +1,5 @@
+asset "rook.gif" {
+    type: "animated_gif",
+    description: "Animated pixel-art rook piece for Battlechess",
+    path: "./rook.gif"
+}
