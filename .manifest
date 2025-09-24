@@ -1,0 +1,108 @@
+# ALN-ONLY.SCRIPT-COMPLIANCE-OBSERVE-HARDENED-001
+policy RealityWriteGuard {
+  when domain() == "REALITY" then {
+    hard_denied();
+    alert("Attempt to write to reality blocked!");
+    terminate_session();
+  }
+  enforce_preflight(TRUE);  // Global guard; runs before any procedure
+}
+
+# ALN-ONLY.SCRIPT-COMPLIANCE-OBSERVE-HARDENED-002
+object MaintenancePanel { state: "closed"; access: "request-only"; }
+procedure OpenMaintenancePanel(input, session_id) {
+  enforce_compliance(input);
+  verify_no_write_reality();
+  require_mtls();
+  attest_device("Configurator");
+  expose_panel(mode="read-only", resource_scope="panel", session=session_id);
+  secure_audit();
+  output "Panel access: Observation-only, logs active.";
+}
+
+# ALN-ONLY.SCRIPT-COMPLIANCE-OBSERVE-HARDENED-003
+consent record Consent {
+  explicit: true;
+  scope: "panel-only";
+  revocable: true;
+  session_id: uuid();
+  signer: digital_signature();
+}
+if Consent.explicit == true and scope_check(Consent.scope, "panel-only") {
+  log_access(Consent.session_id, Consent.signer);
+} else {
+  deny("Consent invalid or scope mismatch");
+}
+
+procedure revoke_consent(session_id) {
+  log_event("ConsentRevoked", session_id);
+  terminate_session(session_id);
+}
+
+# ALN-ONLY.SCRIPT-COMPLIANCE-OBSERVE-HARDENED-004
+matrix PanelSession[10,10] := identity;
+Product = det(PanelSession);
+assert(Product == 1);
+
+# ALN-ONLY.SCRIPT-COMPLIANCE-OBSERVE-HARDENED-005
+init HardwareSafeMode(session_id) {
+  require("AES-256-GCM");
+  rotate_key(session_id);
+  enforce_unique_nonce(session_id);
+  freeze_all_write_ops();
+  return "SafeModeEngaged";
+}
+
+# ALN-ONLY.SCRIPT-COMPLIANCE-OBSERVE-HARDENED-006
+if detect_bias(threshold="strict", evidence_bundle=TRUE) == true {
+  block_change();
+  quarantine_session(session_id, time="7d", appeal_allowed=TRUE);
+  log_event("BiasDetected", session_id);
+  require_human_review(session_id);
+}
+
+# ALN-ONLY.SCRIPT-COMPLIANCE-OBSERVE-HARDENED-007
+policy "no mind control" {
+  enforce_humanrights(TRUE);
+  require_audit_trail(TRUE);
+  prohibit_signals(["BCI", "neural", "subliminal", "coercive"]);
+  verify_ingress_banlist(TRUE);
+  return "PolicyEngaged";
+}
+
+# ALN-ONLY.SCRIPT-COMPLIANCE-OBSERVE-HARDENED-008
+let n := session_metric("panel_samples");
+AdvancedCalculation := (sum(i^2, i=1..n)) / n;  // Mean of squares; n must be defined
+output "Calibration: " + AdvancedCalculation;
+
+# ALN-ONLY.SCRIPT-COMPLIANCE-OBSERVE-HARDENED-009
+object Configurator {
+  OS_Version: "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx";
+  AdminPrivileges: true;
+  VSC_Device: "VSC-Artemis";
+}
+require_mtls();
+log_configurator_state();
+device_posture_check("Configurator");
+
+# ALN-ONLY.SCRIPT-COMPLIANCE-OBSERVE-HARDENED-010
+procedure MatriculatedProcessing() {
+  let Q := integrate(sin(x), x=0..π);  // = 2
+  output "Adaptive-Integrate Q=" + Q;
+}
+
+# ALN-ONLY.SCRIPT-COMPLIANCE-OBSERVE-HARDENED-011
+audit_chain {
+  append_only(TRUE);
+  hash_link(TRUE);
+  periodic_anchor("digital-signature-ledger", interval="24h");
+  dual_approval(required_for="sensitive_state_view");
+}
+
+# ALN-ONLY.SCRIPT-COMPLIANCE-OBSERVE-HARDENED-012
+inbound_sandbox {
+  schema_validate(TRUE);
+  deserialization_mode("read-only");
+  rate_limit(burst=20, per_minute=60);
+  circuit_breaker(trigger_on="anomaly|policy_violation", manual_override=TRUE);
+}
